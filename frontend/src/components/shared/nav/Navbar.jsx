@@ -2,26 +2,23 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import "./Navbar.css";
 
-import { Flex, Text, Button } from '@radix-ui/themes';
+import { Flex, Text, Button, Link } from '@radix-ui/themes';
 
 export default function Navbar() {
   return (
     <nav>
       <div className="nav-left">
-        <NavLink to="/" className="nav">
+        <Link href="/" className="nav">
           Recipe App
-        </NavLink>
+        </Link>
       </div>
       <div className="nav-right">
-        <NavLink to="/" className="nav">
-          Home
-        </NavLink>
-        <NavLink to="/login" className="nav">
+        <Link to="/login" className="nav">
           Log In
-        </NavLink>
-        <NavLink to="/register" className="nav">
+        </Link>
+        <a to="/register" className="nav">
         <Button>Sign Up</Button>
-        </NavLink>
+        </a>
       </div>
     </nav>
   );
