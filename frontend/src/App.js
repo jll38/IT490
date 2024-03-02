@@ -10,17 +10,20 @@ import HomePage from "./pages/HomePage";
 import IngredientPage from "./pages/ingredient/IngredientPage";
 import RecipePage from "./pages/recipe/RecipePage";
 import NotFound from "./pages/NotFound/NotFound";
+import LoginPage from "./pages/login/LoginPage";
+import RegisterPage from "./pages/register/RegisterPage";
 
 function App() {
   return (
     <main className="App">
       <Navbar />
-      <SubNav/>
+      <SubNav />
       <Switch>
         <Route path="/ingredient/:id" component={IngredientPage} />
         <Route path="/recipe/:id" component={RecipePage} />
+        <Route path="/login" component={LoginPage}/>
+        <Route path="/register" component={RegisterPage}/>
         <Route path="/" component={HomePage} />
-        
       </Switch>
     </main>
   );

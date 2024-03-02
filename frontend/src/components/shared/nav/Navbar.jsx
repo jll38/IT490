@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import "./Navbar.css";
 
-import { Flex, Text, Button, Link } from '@radix-ui/themes';
+import { Flex, Text, Button, Link } from "@radix-ui/themes";
 
 export default function Navbar() {
   return (
@@ -13,12 +13,17 @@ export default function Navbar() {
         </Link>
       </div>
       <div className="nav-right">
-        <Link to="/login" className="nav">
+        <a href="/login" className="nav">
           Log In
-        </Link>
-        <a to="/register" className="nav">
-        <Button>Sign Up</Button>
         </a>
+
+        <Button
+          onClick={() => {
+            window.location.assign("/register");
+          }}
+        >
+          Sign Up
+        </Button>
       </div>
     </nav>
   );
