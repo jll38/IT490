@@ -5,11 +5,11 @@ export default function SubNav() {
   return (
     <nav className="sub-nav">
       <div className="items-area">
-        <div>Trending</div>
-        <div>Meal Plans</div>
-        <div>Recipes</div>
-        <div>Ingredients</div>
-        <div>Calculator</div>
+        <button onClick={() => {window.location.assign('/trending')}}>Trending</button>
+        <button onClick={() => {window.location.assign('/meal-plans')}}>Meal Plans</button>
+        <button onClick={() => {window.location.assign('/recipes')}}>Recipes</button>
+        <button onClick={() => {window.location.assign('/ingredients')}}>Ingredients</button>
+        <button onClick={() => {window.location.assign('/calculator')}}>Nutrition Calculator</button>
       </div>
     </nav>
   );

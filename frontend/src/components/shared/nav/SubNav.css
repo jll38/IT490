@@ -8,7 +8,26 @@
 
 .sub-nav .items-area {
   width: 750px;
+  height: inherit;
   display: flex;
   align-items: center;
   justify-content: space-around;
+}
+
+button{
+  width: 100%;
+  height: 100%;
+}
+button:hover{
+  animation: .1s ease-in hoverButton;
+  animation-fill-mode: forwards ;
+}
+
+@keyframes hoverButton {
+  0%{
+    background-color: rgb(207, 207, 207);
+  }
+  100%{
+    background-color: rgb(199, 199, 199);
+  }
 }
