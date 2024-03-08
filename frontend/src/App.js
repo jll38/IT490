@@ -1,7 +1,8 @@
 import logo from "./logo.svg";
 import "./App.css";
 import "@radix-ui/themes/styles.css";
-import { Route, Switch } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import Navbar from "./components/shared/nav/Navbar";
 import SubNav from "./components/shared/nav/SubNav";
 
@@ -14,17 +15,36 @@ import LoginPage from "./pages/login/LoginPage";
 import RegisterPage from "./pages/register/RegisterPage";
 
 function App() {
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <HomePage/>,
+    },
+    {
+      path: "login",
+      element: <LoginPage/>,
+    },
+    {
+      path: "register",
+      element: <RegisterPage/>,
+    },
+    {
+      path: "ingredients",
+      element: <IngredientPage/>,
+      children: [
+        {path: ":id"}
+      ]
+    },
+    {
+      path: "recipes",
+      element: <RecipePage/>,
+    }
+  ]);
   return (
     <main className="App">
       <Navbar />
       <SubNav />
-      <Switch>
-        <Route path="/ingredient/:id" component={IngredientPage} />
-        <Route path="/recipe/:id" component={RecipePage} />
-        <Route path="/login" component={LoginPage}/>
-        <Route path="/register" component={RegisterPage}/>
-        <Route path="/" component={HomePage} />
-      </Switch>
+      <RouterProvider router={router} />
     </main>
   );
 }
