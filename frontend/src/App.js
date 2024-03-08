@@ -9,7 +9,7 @@ import SubNav from "./components/shared/nav/SubNav";
 //Pages Imports
 import HomePage from "./pages/HomePage";
 import IngredientPage from "./pages/ingredient/IngredientPage";
-import RecipePage from "./pages/recipe/RecipePage";
+import RecipePage from "./pages/recipes/RecipesSearch";
 import NotFound from "./pages/NotFound/NotFound";
 import LoginPage from "./pages/login/LoginPage";
 import RegisterPage from "./pages/register/RegisterPage";
