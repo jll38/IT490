@@ -8,7 +8,7 @@ import {
   Button,
   Heading,
 } from "@radix-ui/themes";
-import { User, Key} from "tabler-icons-react";
+import { User, Key } from "tabler-icons-react";
 
 export default function LoginPage() {
   const [username, setUsername] = React.useState(null);
@@ -16,7 +16,7 @@ export default function LoginPage() {
 
   const [errorMessage, setErrorMessage] = React.useState(null);
 
-  const apiRoute = "/api/auth/login";
+  const apiRoute = "http://localhost:8000/api/login";
   async function handleSubmit() {
     if (!username || !password) {
       setErrorMessage("Missing Required Field(s)");
@@ -30,20 +30,22 @@ export default function LoginPage() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: {
+      body: JSON.stringify({
         username,
         password,
-      },
-    }).then((res) => {
-      if (!res.ok) {
-        console.error("Error logging in User:\n");
-        return null;
-      } else{
-        return res.json();
-      }
-    }).finally((data) => {
-      console.log(data)
-    });
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          console.error("Error logging in User:\n");
+          return null;
+        } else {
+          return res.json();
+        }
+      })
+      .finally((data) => {
+        console.log(data);
+      });
   }
 
   return (
