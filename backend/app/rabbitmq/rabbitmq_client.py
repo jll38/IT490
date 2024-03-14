@@ -3,7 +3,7 @@ import uuid
 import json
 
 class RabbitMQ:
-    def __init__(self, host='localhost', queue_name='default_queue', username='guest', password='guest'):
+    def __init__(self, host='localhost', queue_name='default_queue', username='admin', password='IT490'):
         self.queue_name = queue_name
         self.connection = pika.BlockingConnection(
             pika.ConnectionParameters(
@@ -13,7 +13,7 @@ class RabbitMQ:
         )
         self.channel = self.connection.channel()
 
-        result = self.channel.queue_declare(queue='', exclusive=True)
+        result = self.channel.queue_declare(queue=queue_name)
         self.callback_queue = result.method.queue
 
         self.channel.basic_consume(

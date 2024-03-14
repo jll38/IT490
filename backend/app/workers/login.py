@@ -7,7 +7,7 @@ from mysql.connector import Error
 db_config = {
     'host': 'localhost',
     'port': 3306,
-    'user': 'root',
+    'user': 'admin',
     'password': 'password',
     'database': 'recipe_app'
 }
@@ -24,8 +24,9 @@ def validate_user_credentials(username, password):
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT password FROM users WHERE username = %s", (username,))
+        cursor.execute("SELECT password FROM user WHERE name = %s", (username,))
         user_record = cursor.fetchone()
+        print(user_record)
         cursor.close()
         conn.close()
         if user_record and user_record['password'] == password:  # Consider using hashed passwords in production

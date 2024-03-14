@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from app.rabbitmq.rabbitmq_client import RabbitMQ
 from pydantic import BaseModel
 
@@ -15,7 +15,7 @@ async def login(request: LoginRequest):
     rabbitmq_client = RabbitMQ(queue_name='login_queue')
     response = rabbitmq_client.call({'username': request.username, 'password': request.password})
     rabbitmq_client.close_connection()
-
+    print(response)
     if response["success"]:
         return {"message": "Login successful"}
     else:
