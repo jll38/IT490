@@ -13,32 +13,35 @@ import RecipePage from "./pages/recipes/RecipesSearch";
 import NotFound from "./pages/NotFound/NotFound";
 import LoginPage from "./pages/login/LoginPage";
 import RegisterPage from "./pages/register/RegisterPage";
+import Onboarding from "./pages/onboarding/Onboarding";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <HomePage/>,
+      element: <HomePage />,
     },
     {
       path: "login",
-      element: <LoginPage/>,
+      element: <LoginPage />,
     },
     {
       path: "register",
-      element: <RegisterPage/>,
+      element: <RegisterPage />,
+    },
+    {
+      path: "register/onboarding",
+      element: <Onboarding />,
     },
     {
       path: "ingredients",
-      element: <IngredientPage/>,
-      children: [
-        {path: ":id"}
-      ]
+      element: <IngredientPage />,
+      children: [{ path: ":id" }],
     },
     {
       path: "recipes",
-      element: <RecipePage/>,
-    }
+      element: <RecipePage />,
+    },
   ]);
   return (
     <main className="App">
