@@ -8,7 +8,7 @@ function TDEECalculator() {
   const [gender, setGender] = useState("male");
   const [activity, setActivity] = useState("1.2");
   const [tdee, setTdee] = useState(0);
-  const [weightGoal, setWeightGoal] = useState(0);
+  const [weightGoal, setWeightGoal] = useState();
 
   React.useEffect(() => {
     console.log(weightGoal);
@@ -36,6 +36,10 @@ function TDEECalculator() {
     const bmr = calculateBMR();
     const tdee = bmr * Number(activity);
     setTdee(tdee);
+  };
+
+  const getTotalCals = () => {
+    return tdee + Number(weightGoal);
   };
 
   return (
@@ -78,7 +82,6 @@ function TDEECalculator() {
               type="radio"
               name="weightChangePace"
               value={0}
-              checked
               onChange={(e) => {
                 setWeightGoal(e.target.value);
               }}
@@ -197,25 +200,43 @@ function TDEECalculator() {
             onChange={(e) => setActivity(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           >
-            <option value="1.2">Sedentary</option>
-            <option value="1.375">Lightly active</option>
-            <option value="1.55">Moderately active</option>
-            <option value="1.725">Very active</option>
-            <option value="1.9">Super active</option>
+            <option value="1.2">
+              Sedentary - <em>Little or no exercise, office job</em>
+            </option>
+            <option value="1.375">
+              Lightly active -{" "}
+              <em>Light daily activity & exercise 1-3 days per week</em>
+            </option>
+            <option value="1.55">
+              Moderately active -{" "}
+              <em> Moderate daily activity & exercise 3-5 days per week</em>
+            </option>
+            <option value="1.725">
+              Very active -{" "}
+              <em>
+                Physically demanding lifestyle & exercise 6-7 days per week
+              </em>
+            </option>
+            <option value="1.9">
+              Super active - <em>Hard daily exercise/sports & physical job</em>
+            </option>
           </select>
         </div>
         <button
+          disabled={!weightGoal}
           onClick={calculateTDEE}
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+            weightGoal ? "bg-indigo-600" : "bg-slate-300  "
+          } hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
         >
           Calculate TDEE
         </button>
         {tdee > 0 && (
           <div className="mt-4 p-4 text-sm text-gray-700 bg-gray-100 rounded-lg">
-            Your Total Daily Energy Expenditure (TDEE) is {tdee.toFixed(2)}{" "}
-            calories. <br />
+            Your Total Daily Energy Expenditure (TDEE) is{" "}
+            {Number.parseInt(tdee)} calories. <br />
             Based on your goal, you should consume{" "}
-            {Number.parseInt(tdee + weightGoal)} Calories per day.
+            {Number.parseInt(getTotalCals())} Calories per day.
           </div>
         )}
       </div>

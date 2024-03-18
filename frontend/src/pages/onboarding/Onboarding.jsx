@@ -1,6 +1,8 @@
 import React from "react";
 import TDEECalculator from "../../components/TDEE/TDEECalculator";
 export default function Onboarding() {
+
+  const handleSubmit = () => {};
   return (
     <form class="max-w-lg mx-auto my-4 p-6 bg-white shadow-md rounded-lg">
       <div className="mb-4">
@@ -62,8 +64,6 @@ export default function Onboarding() {
       </fieldset>
       <h3 class="text-xl font-semibold">Calculate your Calories</h3>
       <TDEECalculator />
-
-
       <button
         type="submit"
         class="mt-6 w-full bg-indigo-600 text-white p-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
