@@ -7,7 +7,6 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import "./RecipesSearch.css";
 
 export default function RecipesSearch() {
-  const { id } = useParams(); // Assuming you'll use this for something specific later
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -16,31 +15,32 @@ export default function RecipesSearch() {
 
   const js = [
     {
-      title: "test",
-      description: "test description",
-      nutrition: { calories: 240, protein: 10, fat: 20, carbs: 30 },
+      id: 1,
+      title: "Spaghetti Carbonara",
+      description: "A classic Italian pasta dish with creamy egg sauce.",
+      src: "/images/spaghetti-carbonara.jpg",
+      nutrition: {
+        calories: 475,
+        protein: "23g",
+        fat: "10g",
+        carbs: "70g"
+      }
     },
     {
-      title: "test",
-      description: "test description",
-      nutrition: { calories: 240, protein: 10, fat: 20, carbs: 30 },
+      id: 2,
+      title: "Caesar Salad",
+      description: "Crispy greens tossed with traditional Caesar dressing.",
+      src: "/images/caesar-salad.jpg",
+      nutrition: {
+        calories: 350,
+        protein: "12g",
+        fat: "26g",
+        carbs: "22g"
+      }
     },
-    {
-      title: "test",
-      description: "test description",
-      nutrition: { calories: 240, protein: 10, fat: 20, carbs: 30 },
-    },
-    {
-      title: "test",
-      description: "test description",
-      nutrition: { calories: 240, protein: 10, fat: 20, carbs: 30 },
-    },
-    {
-      title: "test",
-      description: "test description",
-      nutrition: { calories: 240, protein: 10, fat: 20, carbs: 30 },
-    },
+    // Add more recipe objects as needed
   ];
+  
 
   // Filter recipes based on searchTerm
   const filteredRecipes = js.filter((recipe) => {
@@ -74,9 +74,7 @@ export default function RecipesSearch() {
       >
         {filteredRecipes.map((recipe, i) => (
           <RecipeSearchBox
-            title={recipe.title}
-            description={recipe.description}
-            nutrition={recipe.nutrition}
+            recipe={recipe}
             key={"recipe-" + i} // Consider using a more stable key if possible
           />
         ))}

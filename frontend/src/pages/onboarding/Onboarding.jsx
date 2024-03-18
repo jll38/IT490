@@ -1,8 +1,15 @@
 import React from "react";
 import TDEECalculator from "../../components/TDEE/TDEECalculator";
 export default function Onboarding() {
-
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    fetch("auth/register/onboarding", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: {},
+    });
+  };
   return (
     <form class="max-w-lg mx-auto my-4 p-6 bg-white shadow-md rounded-lg">
       <div className="mb-4">

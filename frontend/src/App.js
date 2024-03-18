@@ -14,7 +14,8 @@ import NotFound from "./pages/NotFound/NotFound";
 import LoginPage from "./pages/login/LoginPage";
 import RegisterPage from "./pages/register/RegisterPage";
 import Onboarding from "./pages/onboarding/Onboarding";
-
+import RecipesSearch from "./pages/recipes/RecipesSearch";
+import Recipe from "./pages/recipes/Recipe";
 function App() {
   const router = createBrowserRouter([
     {
@@ -39,8 +40,17 @@ function App() {
       children: [{ path: ":id" }],
     },
     {
+      path: "ingredients/:id",
+      element: <Recipe />,
+      children: [{ path: ":id" }],
+    },
+    {
       path: "recipes",
-      element: <RecipePage />,
+      element: <RecipesSearch />,
+    },
+    {
+      path: "recipes/:id",
+      element: <Recipe />,
     },
   ]);
   return (
