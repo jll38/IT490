@@ -16,8 +16,11 @@ import RegisterPage from "./pages/register/RegisterPage";
 import Onboarding from "./pages/onboarding/Onboarding";
 import RecipesSearch from "./pages/recipes/RecipesSearch";
 import Recipe from "./pages/recipes/Recipe";
+
+//Forum
 import ForumPage from "./pages/forum/Forum";
 import CreatePostPage from "./pages/forum/CreatePost";
+import PostDetailPage from "./pages/forum/ForumPost";
 
 function App() {
   const router = createBrowserRouter([
@@ -65,7 +68,7 @@ function App() {
     },
     {
       path: "forum/:id",
-      element: <Recipe />,
+      element: <PostDetailPage />,
     },
   ]);
   return (
