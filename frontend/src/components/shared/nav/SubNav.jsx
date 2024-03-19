@@ -9,7 +9,8 @@ export default function SubNav() {
         <button onClick={() => {window.location.assign('/meal-plans')}}>Meal Plans</button>
         <button onClick={() => {window.location.assign('/recipes')}}>Recipes</button>
         <button onClick={() => {window.location.assign('/ingredients')}}>Ingredients</button>
-        <button onClick={() => {window.location.assign('/calculator')}}>Nutrition Calculator</button>
+        <button onClick={() => {window.location.assign('/forum')}}>Forum</button>
+
       </div>
     </nav>
   );
