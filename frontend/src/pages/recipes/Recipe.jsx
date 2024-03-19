@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-
+import StarRating from "../../components/shared/StarRating/StarRating";
 export default function Recipe() {
   let { id } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const handleReview = () => {
+
+  }
+  
   useEffect(() => {
     fetch(`/api/recipes/${id}`)
       .then((res) => {
@@ -30,7 +34,8 @@ export default function Recipe() {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>Error: {error}
+    <StarRating/></div>;
   }
 
   if (!recipe) {

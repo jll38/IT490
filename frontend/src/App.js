@@ -16,6 +16,8 @@ import RegisterPage from "./pages/register/RegisterPage";
 import Onboarding from "./pages/onboarding/Onboarding";
 import RecipesSearch from "./pages/recipes/RecipesSearch";
 import Recipe from "./pages/recipes/Recipe";
+import ForumPage from "./pages/forum/Forum";
+
 function App() {
   const router = createBrowserRouter([
     {
@@ -50,6 +52,14 @@ function App() {
     },
     {
       path: "recipes/:id",
+      element: <Recipe />,
+    },
+    {
+      path: "forum",
+      element: <ForumPage />,
+    },
+    {
+      path: "forum/:id",
       element: <Recipe />,
     },
   ]);
