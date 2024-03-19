@@ -49,17 +49,29 @@ const ForumPage = () => {
         />
       </div>
 
+      <div className="mb-4">
+        <a
+          href="/forum/create-post"
+          className="inline-block bg-blue-500 text-white p-2 rounded hover:bg-blue-700 transition-colors"
+        >
+          New Post
+        </a>
+      </div>
       {/* Posts List */}
       <div className="forum-posts">
         {filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
-            <div key={post.id} className="border-b border-gray-200 py-4">
+            <a
+              href={`/forum/${post.id}`}
+              key={post.id}
+              className="block border-b border-gray-200 py-4 hover:bg-gray-100 px-2"
+            >
               <h2 className="text-xl font-semibold">{post.title}</h2>
               <p className="text-sm text-gray-500">
                 Posted by {post.author} on {post.datePosted}
               </p>
               <p className="mt-2">{post.content}</p>
-            </div>
+            </a>
           ))
         ) : (
           <p>No posts found.</p>

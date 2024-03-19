@@ -17,6 +17,7 @@ import Onboarding from "./pages/onboarding/Onboarding";
 import RecipesSearch from "./pages/recipes/RecipesSearch";
 import Recipe from "./pages/recipes/Recipe";
 import ForumPage from "./pages/forum/Forum";
+import CreatePostPage from "./pages/forum/CreatePost";
 
 function App() {
   const router = createBrowserRouter([
@@ -57,6 +58,10 @@ function App() {
     {
       path: "forum",
       element: <ForumPage />,
+    },
+    {
+      path: "forum/create-post",
+      element: <CreatePostPage/>,
     },
     {
       path: "forum/:id",
