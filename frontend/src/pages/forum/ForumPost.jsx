@@ -6,7 +6,7 @@ const PostDetailPage = () => {
   const [post, setPost] = useState({
     title: "Title",
     author: "Joe Mama",
-    date: "May 13th, 2002",
+    date: "May 13th, 2002c",
     content: "Hello there",
   });
   const [comments, setComments] = useState([]);

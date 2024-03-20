@@ -22,6 +22,8 @@ import ForumPage from "./pages/forum/Forum";
 import CreatePostPage from "./pages/forum/CreatePost";
 import PostDetailPage from "./pages/forum/ForumPost";
 
+import ShoppingList from "./pages/ShoppingList/ShoppingList";
+
 function App() {
   const router = createBrowserRouter([
     {
@@ -64,12 +66,13 @@ function App() {
     },
     {
       path: "forum/create-post",
-      element: <CreatePostPage/>,
+      element: <CreatePostPage />,
     },
     {
       path: "forum/:id",
       element: <PostDetailPage />,
     },
+    { path: "shopping-list", element: <ShoppingList /> },
   ]);
   return (
     <main className="App">
