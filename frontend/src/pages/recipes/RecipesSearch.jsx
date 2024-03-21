@@ -81,6 +81,10 @@ export default function RecipesSearch() {
     );
   });
 
+  const fetchMoreRecipes = () => {
+    console.log("Fetching more recipes...");
+  }
+
   return (
     <div className="container-search" style={{ padding: "1rem 4rem" }}>
       <div className="relative">
@@ -102,13 +106,13 @@ export default function RecipesSearch() {
           <div className="absolute border z-50 top-[60px] bg-white w-full">
             {" "}
             {filteredRecipes.map((recipe, i) => (
-              <button className="px-2 text-left flex items-center gap-4 border-b py-1">
+              <button onClick={() => {window.location.assign("/recipes/" + recipe.id)}} className="px-2 text-left flex items-center gap-4 border-b py-1">
                 <img className="w-[50px] h-[50px] object-cover" src={recipe.src}></img>
                 {recipe.title}
               </button>
             ))}
             <div>
-              <Button variant="transparent" className="w-full">
+              <Button variant="transparent" className="w-full" onClick={fetchMoreRecipes}>
                 Load More
               </Button>
             </div>
