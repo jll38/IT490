@@ -3,39 +3,52 @@ import { useParams } from "react-router-dom";
 import StarRating from "../../components/shared/StarRating/StarRating";
 export default function Recipe() {
   let { id } = useParams();
-  const [recipe, setRecipe] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [recipe, setRecipe] = useState({
+    id: 1,
+    title: "Spaghetti Carbonara",
+    description: "A classic Italian pasta dish with creamy egg sauce.",
+    src: "/images/spaghetti-carbonara.jpg",
+    nutrition: {
+      calories: 475,
+      protein: "23g",
+      fat: "10g",
+      carbs: "70g",
+    },
+  });
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleReview = () => {
+  const handleReview = () => {};
 
-  }
-  
-  useEffect(() => {
-    fetch(`/api/recipes/${id}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setRecipe(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        setError(error.message);
-        setIsLoading(false);
-      });
-  }, [id]);
+  // useEffect(() => {
+  //   fetch(`/api/recipes/${id}`)
+  //     .then((res) => {
+  //       if (!res.ok) {
+  //         throw new Error("Network response was not ok");
+  //       }
+  //       return res.json();
+  //     })
+  //     .then((data) => {
+  //       setRecipe(data);
+  //       setIsLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       setError(error.message);
+  //       setIsLoading(false);
+  //     });
+  // }, [id]);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}
-    <StarRating/></div>;
+    return (
+      <div>
+        Error: {error}
+
+      </div>
+    );
   }
 
   if (!recipe) {
@@ -50,6 +63,8 @@ export default function Recipe() {
         alt={recipe.title}
         className="w-full max-w-md h-auto rounded-lg"
       />
+      <StarRating editable={false} level={5}/>
+      <StarRating editable={true} level={5}/>
       <p className="mt-4">{recipe.description}</p>
       <h2 className="text-2xl font-bold mt-6 mb-2">Nutrition Facts</h2>
       <ul>
