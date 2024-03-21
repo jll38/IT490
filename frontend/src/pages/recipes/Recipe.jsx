@@ -7,7 +7,7 @@ export default function Recipe() {
     id: 1,
     title: "Spaghetti Carbonara",
     description: "A classic Italian pasta dish with creamy egg sauce.",
-    src: "/images/spaghetti-carbonara.jpg",
+    src: "https://static01.nyt.com/images/2021/02/14/dining/carbonara-horizontal/carbonara-horizontal-square640-v2.jpg",
     nutrition: {
       calories: 475,
       protein: "23g",
@@ -63,8 +63,8 @@ export default function Recipe() {
         alt={recipe.title}
         className="w-full max-w-md h-auto rounded-lg"
       />
-      <StarRating editable={false} level={5}/>
-      <StarRating editable={true} level={5}/>
+      <StarRating editable={false} level={5} recipe={recipe}/>
+      <StarRating editable={true} level={5} recipe={recipe}/>
       <p className="mt-4">{recipe.description}</p>
       <h2 className="text-2xl font-bold mt-6 mb-2">Nutrition Facts</h2>
       <ul>

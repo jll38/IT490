@@ -1,7 +1,9 @@
 import React from "react";
 import { Card, Inset, Text, Strong } from "@radix-ui/themes";
-
+import StarRating from "../shared/StarRating/StarRating";
+import Badge from "../badge/Badge.jsx";
 export default function RecipeSearchBox({ recipe }) {
+  
   return (
     <Card asChild size="2" style={{ width: 300, maxHeight: 340 }}>
       <a href={`recipes/${recipe.id}`}>
@@ -21,6 +23,7 @@ export default function RecipeSearchBox({ recipe }) {
         <Text as="p" size="3">
           <Strong>{recipe.title}</Strong>
         </Text>
+        <StarRating editable={false} level={5} recipe={recipe}/>
         <Text>{recipe.description}</Text>
         <br />
         <Text size="2">{recipe.nutrition.calories} Calories</Text>
