@@ -2,3 +2,4 @@ uvicorn
 pika
 fastapi
 mysql-connector-python
+email-validator

@@ -8,7 +8,7 @@ def validate_user_credentials(db_config, username, password):
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT password FROM user WHERE name = %s", (username,))
+        cursor.execute("SELECT password FROM Users WHERE name = %s", (username,))
         user_record = cursor.fetchone()
         print(user_record)
         cursor.close()

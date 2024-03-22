@@ -5,7 +5,15 @@ import "./HomePage.css";
 import RecipeCarousel from "../components/carousel/Carousel";
 import TDEECalculator from "../components/TDEE/TDEECalculator";
 export default function HomePage() {
-  const user = true;
+  const user = localStorage.getItem("user");
+  const onboarding_complete = Boolean(
+    localStorage.getItem("onboarding_complete")
+  );
+  console.log("user")
+
+
+  
+  
 
   const [recentlyViewed, setRecentlyViewed] = React.useState([
     {
@@ -141,12 +149,15 @@ export default function HomePage() {
   //fetch on page load
   React.useEffect(() => {}, []);
 
+  if(user){
+    if(!onboarding_complete) window.location.assign("/register/onboarding_complete")
+    return window.location.assign("/recipes")
+  } 
   return user ? (
     <div className="pageContainer px-10 py-5">
       <div>
-        
         <Heading>Recently Viewed</Heading>
-       <RecipeCarousel recipes={recentlyViewed}/>
+        <RecipeCarousel recipes={recentlyViewed} />
       </div>
     </div>
   ) : (

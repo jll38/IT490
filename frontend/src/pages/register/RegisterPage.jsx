@@ -17,7 +17,7 @@ export default function RegisterPage() {
 
   const [errorMessage, setErrorMessage] = React.useState(null);
 
-  const apiRoute = "/api/auth/register";
+  const apiRoute = "http://localhost:8000/api/auth/register";
 
   async function handleSubmit() {
     if (!username || !password || !email) {
@@ -32,18 +32,20 @@ export default function RegisterPage() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: {
+      body: JSON.stringify({
         username,
-        email,
+        email,  
         password,
-      },
+      }),
     })
       .then((res) => {
         if (!res.ok) {
           console.error("Error logging in User:\n");
           return null;
         } else {
-          return res.json();
+          window.location.assign("/register/onboarding");
+          localStorage.setItem("user", username);
+          localStorage.setItem("onboarding_complete", false);
         }
       })
       .finally((data) => {

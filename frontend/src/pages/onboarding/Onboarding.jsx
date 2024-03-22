@@ -1,33 +1,26 @@
 import React from "react";
 import TDEECalculator from "../../components/TDEE/TDEECalculator";
 export default function Onboarding() {
+  const [user, setUser] = React.useState(localStorage.getItem("user"));
   const handleSubmit = () => {
-    fetch("auth/register/onboarding", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: {},
-    });
+    // fetch("auth/register/onboarding", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: {},
+    // });
+    localStorage.setItem("onboarding_complete", true);
+    window.location.assign("/")
   };
   return (
     <form class="max-w-lg mx-auto my-4 p-6 bg-white shadow-md rounded-lg">
-      <div className="mb-4">
-        <h2 class="text-2xl font-semibold">Welcome to RecipeApp!</h2>
+      <div>
+        <h2 class="text-2xl font-semibold">Welcome to RecipeApp, {user || "undefined"}!</h2>
         <div className="block text-sm font-medium text-gray-700">
           Let's get you started
         </div>
       </div>
-      <label for="name" class="block text-sm font-medium text-gray-700">
-        Name
-      </label>
-      <input
-        type="text"
-        id="name"
-        name="name"
-        required
-        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-      />
 
       <fieldset class="mt-4 mb-4">
         <legend class="text-sm font-medium text-gray-700">

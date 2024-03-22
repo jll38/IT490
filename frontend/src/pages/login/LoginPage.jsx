@@ -16,7 +16,7 @@ export default function LoginPage() {
 
   const [errorMessage, setErrorMessage] = React.useState(null);
 
-  const apiRoute = "http://localhost:8000/api/login";
+  const apiRoute = "http://localhost:8000/api/auth/login";
   async function handleSubmit() {
     if (!username || !password) {
       setErrorMessage("Missing Required Field(s)");
