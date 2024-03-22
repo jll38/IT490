@@ -43,7 +43,7 @@ def on_request(ch, method, props, body):
     print(f"Received login request for {username}")
     # Validate credentials
     login_success = validate_user_credentials(username, password)
-
+    
     response = json.dumps({'success': login_success})
     # Send response back to the callback queue
     ch.basic_publish(exchange='',
