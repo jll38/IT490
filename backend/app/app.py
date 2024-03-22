@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from .routers.auth import router as auth_router
+from .routers.forum import router as forum_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -14,6 +15,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(forum_router)
 
 @app.get("/")
 async def root():

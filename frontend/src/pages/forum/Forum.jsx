@@ -1,38 +1,31 @@
-import React from "react";
-
-// Mock data
-const forumPosts = [
-  {
-    id: 1,
-    title: "How to make a simple cake?",
-    author: "JaneDoe123",
-    datePosted: "2023-03-01",
-    content:
-      "Hello everyone! I'm looking for an easy recipe to make a cake. Any suggestions?",
-  },
-  {
-    id: 2,
-    title: "Gardening tips for beginners",
-    author: "GreenThumb2023",
-    datePosted: "2023-03-05",
-    content:
-      "Can anyone share gardening tips for someone just getting started?",
-  },
-  // Add more posts as needed
-];
+import React, { useEffect } from "react";
 
 const ForumPage = () => {
   const [searchTerm, setSearchTerm] = React.useState("");
+  const [posts, setPosts] = React.useState([]); 
+  const [filteredPosts, setFilteredPosts] = React.useState([]);
 
-  // Filter posts based on the search term
-  const filteredPosts =
-    searchTerm.length === 0
-      ? forumPosts
-      : forumPosts.filter(
-          (post) =>
-            post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            post.content.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+  useEffect(() => {
+    
+    setFilteredPosts(
+      searchTerm.length === 0
+        ? posts
+        : posts.filter(
+            (post) =>
+              post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              post.content.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+    );
+  }, [posts, searchTerm]);
+
+  React.useEffect(() => {
+    fetch("http://localhost:8000/api/forum/posts")
+      .then((res) => res.json())
+      .then((data) => {
+        setPosts(data);
+        console.log(data);
+      });
+  }, []);
 
   return (
     <div className="forum-page container mx-auto my-8 p-4">
