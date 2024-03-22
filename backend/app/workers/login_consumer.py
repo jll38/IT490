@@ -3,23 +3,7 @@ import json
 import mysql.connector
 from mysql.connector import Error
 
-# Database configuration
-db_config = {
-    'host': 'localhost',
-    'port': 3306,
-    'user': 'admin',
-    'password': 'password',
-    'database': 'recipe_app'
-}
-
-# Establish connection to RabbitMQ
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-channel = connection.channel()
-
-# Ensure the queue exists
-channel.queue_declare(queue='login_queue')
-
-def validate_user_credentials(username, password):
+def validate_user_credentials(db_config, username, password):
     """Validate login credentials against the database."""
     try:
         conn = mysql.connector.connect(**db_config)
@@ -35,14 +19,14 @@ def validate_user_credentials(username, password):
         print(f"Database error: {e}")
     return False
 
-def on_request(ch, method, props, body):
+def on_request(ch, method, props, body, db_config):
     request = json.loads(body)
     username = request['username']
     password = request['password']
 
     print(f"Received login request for {username}")
     # Validate credentials
-    login_success = validate_user_credentials(username, password)
+    login_success = validate_user_credentials(db_config, username, password)
     
     response = json.dumps({'success': login_success})
     # Send response back to the callback queue
@@ -52,8 +36,29 @@ def on_request(ch, method, props, body):
                      body=response)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
-channel.basic_qos(prefetch_count=1)
-channel.basic_consume(queue='login_queue', on_message_callback=on_request)
+def main():
+    # Database configuration
+    db_config = {
+        'host': 'localhost',
+        'port': 3306,
+        'user': 'admin',
+        'password': 'password',
+        'database': 'recipe_app'
+    }
 
-print(" [x] Awaiting login requests")
-channel.start_consuming()
+    # Establish connection to RabbitMQ
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    channel = connection.channel()
+
+    # Ensure the queue exists
+    channel.queue_declare(queue='login_queue')
+
+    channel.basic_qos(prefetch_count=1)
+    
+    channel.basic_consume(queue='login_queue', on_message_callback=lambda ch, method, props, body: on_request(ch, method, props, body, db_config))
+
+    print(" [x] Awaiting login requests")
+    channel.start_consuming()
+
+if __name__ == "__main__":
+    main()

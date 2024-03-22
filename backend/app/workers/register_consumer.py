@@ -3,24 +3,7 @@ import json
 import mysql.connector
 from mysql.connector import Error
 
-# Database configuration
-db_config = {
-    'host': 'localhost',
-    'port': 3306,
-    'user': 'admin',
-    'password': 'password',
-    'database': 'recipe_app'
-}
-
-# Establish connection to RabbitMQ
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-channel = connection.channel()
-
-# Ensure the queue exists
-channel.queue_declare(queue='register_queue')
-
-def user_exists(username, email):
-    """Check if a user already exists in the database by username or email."""
+def user_exists(db_config, username, email):
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
@@ -31,11 +14,11 @@ def user_exists(username, email):
         return user_record is not None
     except Error as e:
         print(f"Database error: {e}")
-        return False  # Assume existence on error to prevent duplicate attempts
+        return False  #
 
-def register_user(username, email, password):
+def register_user(db_config, username, email, password):
     """Insert a new user into the database."""
-    if user_exists(username, email):
+    if user_exists(db_config, username, email):
         return False  # User already exists
     try:
         conn = mysql.connector.connect(**db_config)
@@ -49,26 +32,44 @@ def register_user(username, email, password):
         print(f"Database error during registration: {e}")
         return False
 
-def on_request(ch, method, props, body):
+def on_request(ch, method, props, body, db_config):
     request = json.loads(body)
     username = request['username']
     email = request['email']
-    password = request['password']  # In a real application, ensure the password is hashed
+    password = request['password'] 
 
     print(f"Received registration request for {username}")
-    # Register user
-    registration_success = register_user(username, email, password)
+
+    registration_success = register_user(db_config, username, email, password)
 
     response = json.dumps({'success': registration_success})
-    # Send response back to the callback queue
     ch.basic_publish(exchange='',
                      routing_key=props.reply_to,
                      properties=pika.BasicProperties(correlation_id=props.correlation_id),
                      body=response)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
-channel.basic_qos(prefetch_count=1)
-channel.basic_consume(queue='register_queue', on_message_callback=on_request)
+def main():
+    db_config = {
+        'host': 'localhost',
+        'port': 3306,
+        'user': 'admin',
+        'password': 'password',
+        'database': 'recipe_app'
+    }
 
-print(" [x] Awaiting registration requests")
-channel.start_consuming()
+    # Establish connection to RabbitMQ
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    channel = connection.channel()
+
+    # Ensure the queue exists
+    channel.queue_declare(queue='register_queue')
+
+    channel.basic_qos(prefetch_count=1)
+    channel.basic_consume(queue='register_queue', on_message_callback=lambda ch, method, props, body: on_request(ch, method, props, body, db_config))
+
+    print(" [x] Awaiting registration requests")
+    channel.start_consuming()
+
+if __name__ == "__main__":
+    main()
