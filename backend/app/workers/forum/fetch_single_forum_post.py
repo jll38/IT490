@@ -4,27 +4,25 @@ import mysql.connector
 from mysql.connector import Error
 from datetime import datetime
 
-
-def fetch_forum_posts(db_config):
-    """Retrieve forum posts from the database, including the username of the poster."""
+def fetch_forum_post_by_id(db_config, post_id):
+    """Retrieve a single forum post from the database by its ID, including the author's username."""
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor(dictionary=True)
         query = """
-        SELECT fp.post_id, fp.user_id, fp.title, fp.content, fp.created_at, u.username as author
+        SELECT fp.post_id, fp.title, fp.content, fp.created_at, u.username as author
         FROM Forum_Posts fp
         JOIN Users u ON fp.user_id = u.user_id
-        ORDER BY fp.created_at DESC
+        WHERE fp.post_id = %s
         """
-        cursor.execute(query)
-        posts = cursor.fetchall()
+        cursor.execute(query, (post_id,))
+        post = cursor.fetchone()
         cursor.close()
         conn.close()
-        return posts
+        return post
     except Error as e:
         print(f"Database error: {e}")
-        return []
-
+        return None
 
 class DateTimeEncoder(json.JSONEncoder):
     """Custom encoder for datetime objects."""
@@ -33,12 +31,22 @@ class DateTimeEncoder(json.JSONEncoder):
             return o.isoformat()
         return super().default(o)
 
-def on_forum_post_select_request(ch, method, props, body, db_config):
-    print("Received request for forum posts")
+def on_forum_post_fetch_request(ch, method, props, body, db_config):
+    print("Received request for a forum post")
+
+    # Parse the incoming message to get the post ID
+    message = json.loads(body)
+    post_id = message.get('post_id')
     
-    posts = fetch_forum_posts(db_config)
+    if post_id is not None:
+        post = fetch_forum_post_by_id(db_config, post_id)
+        if post:
+            response = json.dumps({'success': True, 'post': post}, cls=DateTimeEncoder)
+        else:
+            response = json.dumps({'success': False, 'message': 'Post not found'})
+    else:
+        response = json.dumps({'success': False, 'message': 'No post ID provided'})
     
-    response = json.dumps({'success': True, 'posts': posts}, cls=DateTimeEncoder)
     ch.basic_publish(exchange='',
                      routing_key=props.reply_to,
                      properties=pika.BasicProperties(correlation_id=props.correlation_id),
@@ -57,11 +65,11 @@ def main():
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
 
-    queue_name = 'forum_post_view_queue'
+    queue_name = 'forum_post_fetch_queue'
     channel.queue_declare(queue=queue_name)
 
     channel.basic_qos(prefetch_count=1)
-    channel.basic_consume(queue=queue_name, on_message_callback=lambda ch, method, props, body: on_forum_post_select_request(ch, method, props, body, db_config))
+    channel.basic_consume(queue=queue_name, on_message_callback=lambda ch, method, props, body: on_forum_post_fetch_request(ch, method, props, body, db_config))
 
     print(f" [x] Awaiting requests for forum posts on {queue_name}")
     channel.start_consuming()

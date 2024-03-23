@@ -1,7 +1,7 @@
 import threading
 import login_consumer
 import register_consumer
-from forum import new_post_consumer, fetch_forum_posts
+from forum import new_post_consumer, fetch_forum_posts, fetch_single_forum_post
 
 
 def start_login_consumer():
@@ -18,10 +18,15 @@ def start_forum_post_consumer():
     print("Starting new forum post consumer...")
     new_post_consumer.main()
 
+
 def view_forum_post_consumer():
-    print("Starting view forum post consumer...")
+    print("Starting view forum posts consumer...")
     fetch_forum_posts.main()
 
+
+def view_single_forum_post_consumer():
+    print("Starting view signle forum post consumer...")
+    fetch_single_forum_post.main()
 
 
 if __name__ == "__main__":
@@ -29,13 +34,17 @@ if __name__ == "__main__":
     register_thread = threading.Thread(target=start_register_consumer)
     new_forum_post_thread = threading.Thread(target=start_forum_post_consumer)
     view_forum_post_thread = threading.Thread(target=view_forum_post_consumer)
+    view_single_forum_post_thread = threading.Thread(
+        target=view_single_forum_post_consumer)
 
     login_thread.start()
     register_thread.start()
     new_forum_post_thread.start()
     view_forum_post_thread.start()
+    view_single_forum_post_thread.start()
 
     login_thread.join()
     register_thread.join()
     new_forum_post_thread.join()
     view_forum_post_thread.join()
+    view_single_forum_post_thread.join()

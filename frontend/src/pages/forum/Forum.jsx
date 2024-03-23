@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { isoToReadableDate } from "../../lib/DateTime";
 
 const ForumPage = () => {
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -55,13 +56,13 @@ const ForumPage = () => {
         {filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
             <a
-              href={`/forum/${post.id}`}
-              key={post.id}
+              href={`/forum/${post.post_id}`}
+              key={post.post_id}
               className="block border-b border-gray-200 py-4 hover:bg-gray-100 px-2"
             >
               <h2 className="text-xl font-semibold">{post.title}</h2>
               <p className="text-sm text-gray-500">
-                Posted by {post.author} on {post.datePosted}
+                Posted by u/{post.author} on {isoToReadableDate(post.created_at)}
               </p>
               <p className="mt-2">{post.content}</p>
             </a>

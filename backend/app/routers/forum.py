@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Path
 from pydantic import BaseModel, EmailStr
 from app.rabbitmq.rabbitmq_client import RabbitMQ
 
@@ -56,3 +56,20 @@ async def comment_on_post(request: ForumPostCommentRequest):
         return {"message": "Comment added successfully"}
     else:
         raise HTTPException(status_code=400, detail="Failed to add comment")
+
+@router.get("/api/forum/posts/{post_id}")
+async def view_forum_post(post_id: int = Path(..., description="The ID of the forum post to retrieve")):
+    """
+    Fetch a singular forum post based on ID.
+    """
+    rabbitmq_client = RabbitMQ(queue_name='forum_post_fetch_queue')
+    message = {'post_id': post_id}
+    print(message)
+    response = rabbitmq_client.call(message)
+    rabbitmq_client.close_connection()
+
+    if response.get("success"):
+        return response.get("post", {})
+    else:
+        detail = response.get("detail", "Failed to fetch forum post")
+        raise HTTPException(status_code=404, detail=detail)
