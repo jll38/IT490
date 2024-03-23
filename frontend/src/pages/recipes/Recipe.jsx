@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import StarRating from "../../components/shared/StarRating/StarRating";
+
+import { BACKEND } from "../../lib/constants";
 export default function Recipe() {
   let { id } = useParams();
   const [recipe, setRecipe] = useState();
@@ -8,7 +10,7 @@ export default function Recipe() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:8000/api/recipes/${id}`)
+    fetch(`${BACKEND}/api/recipes/${id}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error("Network response was not ok");

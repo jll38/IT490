@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { isoToReadableDate } from "../../lib/DateTime";
+import { BACKEND } from "../../lib/constants";
 const PostDetailPage = () => {
   const { id } = useParams();
   console.log(id);
@@ -13,7 +14,7 @@ const PostDetailPage = () => {
   useEffect(() => {
 
     // Fetch post details
-    fetch(`http://localhost:8000/api/forum/posts/${id}`) // Adjust the API endpoint as needed
+    fetch(`${BACKEND}/api/forum/posts/${id}`) // Adjust the API endpoint as needed
       .then(res => res.json())
       .then(data => {
         console.log("Fetched data...");

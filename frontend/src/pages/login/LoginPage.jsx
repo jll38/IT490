@@ -10,13 +10,15 @@ import {
 } from "@radix-ui/themes";
 import { User, Key } from "tabler-icons-react";
 
+import { BACKEND } from "../../lib/constants";
+
 export default function LoginPage() {
   const [username, setUsername] = React.useState(null);
   const [password, setPassword] = React.useState(null);
 
   const [errorMessage, setErrorMessage] = React.useState(null);
 
-  const apiRoute = "http://localhost:8000/api/auth/login";
+  const apiRoute = `${BACKEND}/api/auth/login`;
   async function handleSubmit() {
     if (!username || !password) {
       setErrorMessage("Missing Required Field(s)");

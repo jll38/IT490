@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
 
+import { BACKEND } from "../../../lib/constants";
+
 export default function StarRating({
   totalStars = 5,
   editable = true,
@@ -25,7 +27,7 @@ export default function StarRating({
   };
 
   React.useEffect(() => {
-    fetch("http://localhost:8000/api/recipes/set-rating", {
+    fetch(`${BACKEND}/api/recipes/set-rating`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

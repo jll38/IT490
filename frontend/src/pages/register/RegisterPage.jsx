@@ -10,6 +10,8 @@ import {
 } from "@radix-ui/themes";
 import { User, Key, Mail } from "tabler-icons-react";
 
+import { BACKEND } from "../../lib/constants";
+
 export default function RegisterPage() {
   const [username, setUsername] = React.useState(null);
   const [email, setEmail] = React.useState(null);
@@ -17,7 +19,7 @@ export default function RegisterPage() {
 
   const [errorMessage, setErrorMessage] = React.useState(null);
 
-  const apiRoute = "http://localhost:8000/api/auth/register";
+  const apiRoute = `${BACKEND}:8000/api/auth/register`;
 
   async function handleSubmit() {
     if (!username || !password || !email) {

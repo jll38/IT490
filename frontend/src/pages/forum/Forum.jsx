@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { isoToReadableDate } from "../../lib/DateTime";
-
+import { BACKEND } from "../../lib/constants";
 const ForumPage = () => {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [posts, setPosts] = React.useState([]); 
@@ -20,7 +20,7 @@ const ForumPage = () => {
   }, [posts, searchTerm]);
 
   React.useEffect(() => {
-    fetch("http://localhost:8000/api/forum/posts")
+    fetch(`${BACKEND}/api/forum/posts`)
       .then((res) => res.json())
       .then((data) => {
         setPosts(data);

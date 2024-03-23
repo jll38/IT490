@@ -2,13 +2,15 @@ import React from "react";
 import { Button, TextField, Heading } from "@radix-ui/themes";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
+import { BACKEND } from "../../lib/constants";
+
 export default function ShoppingList() {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [trending, setTrending] = React.useState([]);
   const [ingredientsList, setIngredientsList] = React.useState([]);
 
   React.useEffect(() => {
-    fetch("http://localhost:8000/api/recipes/trending")
+    fetch(`${BACKEND}:8000/api/recipes/trending`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -23,11 +25,11 @@ export default function ShoppingList() {
   const [ingredients, setIngredients] = React.useState([]);
 
   const addValues = (recipe_id) => {
-    fetch("http://localhost:8000/api/ingredients/recipe/" + recipe_id)
+    fetch(`${BACKEND}/api/ingredients/recipe/` + recipe_id)
       .then((res) => res.json())
       .then((data) => {
         setIngredientsList((ingredientsList) => [...ingredientsList, ...data]);
-        setSearchTerm("")
+        setSearchTerm("");
       });
   };
 
@@ -91,12 +93,12 @@ export default function ShoppingList() {
         <ul>
           {ingredientsList.map((ingredient, index) => (
             <li key={index}>
-              {ingredient.name} {/* Adjusted to display the ingredient's name */}
+              {ingredient.name}{" "}
+              {/* Adjusted to display the ingredient's name */}
             </li>
           ))}
         </ul>
       </div>
     </div>
   );
-  
 }

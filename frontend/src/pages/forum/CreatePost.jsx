@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { BACKEND } from "../../lib/constants";
 const CreatePostPage = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -7,7 +7,7 @@ const CreatePostPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    fetch("http://localhost:8000/api/forum/post/create", {
+    fetch(`${BACKEND}/api/forum/post/create`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

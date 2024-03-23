@@ -11,6 +11,8 @@ import {
 } from "@radix-ui/themes";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
+import { BACKEND } from "../../lib/constants";
+
 import "./RecipesSearch.css";
 
 export default function RecipesSearch() {
@@ -19,7 +21,7 @@ export default function RecipesSearch() {
   const [currLoadedTrending, setCurrLoadedTrending] = useState(0);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/recipes/trending")
+    fetch(`${BACKEND}/api/recipes/trending`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
