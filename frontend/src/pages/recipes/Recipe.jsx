@@ -3,52 +3,34 @@ import { useParams } from "react-router-dom";
 import StarRating from "../../components/shared/StarRating/StarRating";
 export default function Recipe() {
   let { id } = useParams();
-  const [recipe, setRecipe] = useState({
-    id: 1,
-    title: "Spaghetti Carbonara",
-    description: "A classic Italian pasta dish with creamy egg sauce.",
-    src: "https://static01.nyt.com/images/2021/02/14/dining/carbonara-horizontal/carbonara-horizontal-square640-v2.jpg",
-    nutrition: {
-      calories: 475,
-      protein: "23g",
-      fat: "10g",
-      carbs: "70g",
-    },
-  });
+  const [recipe, setRecipe] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleReview = () => {};
-
-  // useEffect(() => {
-  //   fetch(`/api/recipes/${id}`)
-  //     .then((res) => {
-  //       if (!res.ok) {
-  //         throw new Error("Network response was not ok");
-  //       }
-  //       return res.json();
-  //     })
-  //     .then((data) => {
-  //       setRecipe(data);
-  //       setIsLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       setError(error.message);
-  //       setIsLoading(false);
-  //     });
-  // }, [id]);
+  useEffect(() => {
+    fetch(`http://localhost:8000/api/recipes/${id}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setRecipe(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setIsLoading(false);
+      });
+  }, [id]);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
   if (error) {
-    return (
-      <div>
-        Error: {error}
-
-      </div>
-    );
+    return <div>Error: {error}</div>;
   }
 
   if (!recipe) {
@@ -57,23 +39,26 @@ export default function Recipe() {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-4">{recipe.title}</h1>
+      <h1 className="text-3xl font-bold mb-4">{recipe.recipe_name}</h1>
       <img
         src={recipe.image}
-        alt={recipe.title}
+        alt={recipe.recipe_name}
         className="w-full max-w-md h-auto rounded-lg"
       />
-      <StarRating editable={false} level={5} recipe={recipe}/>
-      <StarRating editable={true} level={5} recipe={recipe}/>
-      <p className="mt-4">{recipe.description}</p>
+      <StarRating
+        editable={false}
+        level={recipe.average_rating}
+        recipe={recipe}
+      />
+      <StarRating editable={true} level={5} recipe={recipe} />
+      <p className="mt-4">{recipe.instructions}</p>
       <h2 className="text-2xl font-bold mt-6 mb-2">Nutrition Facts</h2>
       <ul>
-        <li>Calories: {recipe.nutrition.calories}</li>
-        <li>Protein: {recipe.nutrition.protein}g</li>
-        <li>Fat: {recipe.nutrition.fat}g</li>
-        <li>Carbs: {recipe.nutrition.carbs}g</li>
+        <li>Calories: {recipe.calories}</li>
+        <li>Protein: {Number(recipe.protein, 0)}g</li>
+        <li>Fat: {Number(recipe.fat, 0)}g</li>
+        <li>Carbs: {Number(recipe.carbs, 0)}g</li>
       </ul>
-      {/* Add more details as needed */}
     </div>
   );
 }

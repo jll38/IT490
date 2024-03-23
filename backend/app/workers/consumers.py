@@ -2,35 +2,51 @@ import threading
 import login_consumer
 import register_consumer
 from forum import new_post_consumer, fetch_forum_posts, fetch_single_forum_post, create_forum_post
-from recipes import recipe_home_consumer
+from recipes import recipe_home_consumer, recipe_page_consumer, recipe_rating_consumer
+
 
 def start_login_consumer():
     print("Starting login consumer...")
     login_consumer.main()
 
+
 def start_register_consumer():
     print("Starting register consumer...")
     register_consumer.main()
+
 
 def start_forum_post_consumer():
     print("Starting new forum post consumer...")
     new_post_consumer.main()
 
+
 def view_forum_post_consumer():
     print("Starting view forum posts consumer...")
     fetch_forum_posts.main()
+
 
 def view_single_forum_post_consumer():
     print("Starting view single forum post consumer...")
     fetch_single_forum_post.main()
 
+
 def create_forum_post_consumer():
     print("Starting create forum post consumer...")
     create_forum_post.main()
 
+
 def recipe_homepage_consumer():
     print("Starting recipe home page consumer...")
     recipe_home_consumer.main()
+
+
+def recipe_page():
+    print("Starting recipe page consumer...")
+    recipe_page_consumer.main()
+
+def recipe_rating():
+    print("Starting recipe rating consumer...")
+    recipe_rating_consumer.main()
 
 
 if __name__ == "__main__":
@@ -43,6 +59,8 @@ if __name__ == "__main__":
     create_forum_post_thread = threading.Thread(
         target=create_forum_post_consumer)
     recipe_home_thread = threading.Thread(target=recipe_homepage_consumer)
+    recipe_page_thread = threading.Thread(target=recipe_page)
+    recipe_rating_thread = threading.Thread(target=recipe_rating)
 
     login_thread.start()
     register_thread.start()
@@ -51,6 +69,8 @@ if __name__ == "__main__":
     view_single_forum_post_thread.start()
     create_forum_post_thread.start()
     recipe_home_thread.start()
+    recipe_page_thread.start()
+    recipe_rating_thread.start()
 
     login_thread.join()
     register_thread.join()
@@ -59,3 +79,5 @@ if __name__ == "__main__":
     view_single_forum_post_thread.join()
     create_forum_post_thread.join()
     recipe_home_thread.join()
+    recipe_page_thread.join()
+    recipe_rating_thread.join()

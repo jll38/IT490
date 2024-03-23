@@ -89,7 +89,6 @@ def on_fetch_recent_request(ch, method, props, body, db_config):
                      body=response)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
-
 def main():
     db_config = {
         'host': 'localhost',
