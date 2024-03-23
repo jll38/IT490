@@ -21,16 +21,16 @@ export default function RecipeSearchBox({ recipe }) {
           />
         </Inset>
         <Text as="p" size="3">
-          <Strong>{recipe.title}</Strong>
+          <Strong>{recipe.recipe_name}</Strong>
         </Text>
-        <StarRating editable={false} level={5} recipe={recipe}/>
-        <Text>{recipe.description}</Text>
+        <StarRating editable={false} level={Number(recipe.average_rating)} recipe={recipe}/>
+        <Text className="text-gray-700">Prep Time: {recipe.preparation_time} Minutes</Text>
         <br />
-        <Text size="2">{recipe.nutrition.calories} Calories</Text>
+        <Text size="2">{recipe.calories} Calories</Text>
         <br />
         <Text size="2">
-          {recipe.nutrition.protein}g Protein | {recipe.nutrition.fat}g Fat |{" "}
-          {recipe.nutrition.carbs}g Carbs
+          {Number(recipe.protein,0)}g Protein | {Number(recipe.fat,0)}g Fat |{" "}
+          {Number(recipe.carbs,0)}g Carbs
         </Text>
       </a>
     </Card>

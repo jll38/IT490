@@ -154,7 +154,7 @@ export default function RecipesSearch() {
             justify={"center"}
             style={{ margin: "10px 0" }}
           >
-            {js.map((recipe, i) => (
+            {trending.map((recipe, i) => (
               <RecipeSearchBox
                 recipe={recipe}
                 key={"recipe-" + i} // Consider using a more stable key if possible
