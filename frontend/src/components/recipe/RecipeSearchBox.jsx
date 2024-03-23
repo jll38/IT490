@@ -6,10 +6,10 @@ export default function RecipeSearchBox({ recipe }) {
   
   return (
     <Card asChild size="2" style={{ width: 300, maxHeight: 340 }}>
-      <a href={`recipes/${recipe.id}`}>
+      <a href={`recipes/${recipe.recipe_id}`}>
         <Inset clip="padding-box" side="top" pb="current">
           <img
-            src={recipe.src}
+            src={recipe.image_url}
             alt="Bold typography"
             style={{
               display: "block",

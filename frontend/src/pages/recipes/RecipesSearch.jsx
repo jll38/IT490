@@ -15,12 +15,8 @@ import "./RecipesSearch.css";
 
 export default function RecipesSearch() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [trending, setTrending] = useState("");
+  const [trending, setTrending] = useState([]);
   const [currLoadedTrending, setCurrLoadedTrending] = useState(0);
-
-  useEffect(() => {
-    console.log(searchTerm);
-  }, [searchTerm]);
 
   useEffect(() => {
     fetch("http://localhost:8000/api/recipes/trending")
@@ -84,10 +80,10 @@ export default function RecipesSearch() {
   ];
 
   // Filter recipes based on searchTerm
-  const filteredRecipes = js.filter((recipe) => {
+  const filteredRecipes = trending.filter((recipe) => {
     return (
       searchTerm === "" ||
-      recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
+      recipe.recipe_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
 
@@ -124,9 +120,17 @@ export default function RecipesSearch() {
               >
                 <img
                   className="w-[50px] h-[50px] object-cover"
-                  src={recipe.src}
+                  src={recipe.image_url}
                 ></img>
-                {recipe.title}
+                <div>
+                  <div>{recipe.recipe_name}</div>
+                  <div className="text-xs text-gray-700">
+                    {recipe.preparation_time} Minutes | {recipe.calories} Cals |{" "}
+                    {Number(recipe.protein, 0)}g Protein |{" "}
+                    {Number(recipe.carbs, 0)}g Carbs | {Number(recipe.fat, 0)}g
+                    Fat
+                  </div>
+                </div>
               </button>
             ))}
             <div>

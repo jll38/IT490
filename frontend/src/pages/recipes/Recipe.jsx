@@ -41,9 +41,9 @@ export default function Recipe() {
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-4">{recipe.recipe_name}</h1>
       <img
-        src={recipe.image}
+        src={recipe.image_url}
         alt={recipe.recipe_name}
-        className="w-full max-w-md h-auto rounded-lg"
+        className="w-full max-w-md max-h-[300px] h-auto rounded-lg object-fill"
       />
       <StarRating
         editable={false}
