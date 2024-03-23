@@ -1,30 +1,34 @@
 import React from "react";
 import { Button, TextField, Heading } from "@radix-ui/themes";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-  
-  export default function ShoppingList() {
-  const [searchTerm, setSearchTerm] = React.useState("");
 
-  const recipes = [
-    {
-      id: 1,
-      title: "Spaghetti Carbonara",
-      ingredients: ["Pasta", "Eggs", "Parmesan Cheese", "Bacon"],
-    },
-    {
-      id: 2,
-      title: "Classic Pancakes",
-      ingredients: ["Flour", "Eggs", "Milk", "Baking Powder", "Salt", "Sugar"],
-    },
-  ];
-  const filteredRecipes = recipes.filter((recipe) =>
-    recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
+export default function ShoppingList() {
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [trending, setTrending] = React.useState([]);
+  const [ingredientsList, setIngredientsList] = React.useState([]);
+
+  React.useEffect(() => {
+    fetch("http://localhost:8000/api/recipes/trending")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setTrending(data);
+      });
+  }, []);
+
+  const filteredRecipes = trending.filter((recipe) =>
+    recipe.recipe_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const [ingredients, setIngredients] = React.useState([]);
 
-  const addValues = (valuesToAdd) => {
-    setIngredients((ingredients) => [...ingredients, ...valuesToAdd]);
+  const addValues = (recipe_id) => {
+    fetch("http://localhost:8000/api/ingredients/recipe/" + recipe_id)
+      .then((res) => res.json())
+      .then((data) => {
+        setIngredientsList((ingredientsList) => [...ingredientsList, ...data]);
+        setSearchTerm("")
+      });
   };
 
   const removeValues = (valuesToRemove) => {
@@ -71,10 +75,10 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
                 padding: 4,
               }}
             >
-              {recipe.title}{" "}
+              {recipe.recipe_name}{" "}
               <Button
                 style={{ maxWidth: "50px" }}
-                onClick={() => addValues(recipe.ingredients)}
+                onClick={() => addValues(recipe.recipe_id)}
               >
                 +
               </Button>
@@ -85,11 +89,14 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
       <div>
         <h2>Shopping List</h2>
         <ul>
-          {ingredients.map((ingredient, index) => (
-            <li key={index}>{ingredient}</li>
+          {ingredientsList.map((ingredient, index) => (
+            <li key={index}>
+              {ingredient.name} {/* Adjusted to display the ingredient's name */}
+            </li>
           ))}
         </ul>
       </div>
     </div>
   );
+  
 }
