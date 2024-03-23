@@ -15,11 +15,21 @@ import "./RecipesSearch.css";
 
 export default function RecipesSearch() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [trending, setTrending] = useState("");
   const [currLoadedTrending, setCurrLoadedTrending] = useState(0);
 
   useEffect(() => {
     console.log(searchTerm);
   }, [searchTerm]);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/api/recipes/trending")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setTrending(data);
+      });
+  }, []);
 
   const js = [
     {
@@ -83,7 +93,7 @@ export default function RecipesSearch() {
 
   const fetchMoreRecipes = () => {
     console.log("Fetching more recipes...");
-  }
+  };
 
   return (
     <div className="container-search" style={{ padding: "1rem 4rem" }}>
@@ -106,13 +116,25 @@ export default function RecipesSearch() {
           <div className="absolute border z-50 top-[60px] bg-white w-full">
             {" "}
             {filteredRecipes.map((recipe, i) => (
-              <button onClick={() => {window.location.assign("/recipes/" + recipe.id)}} className="px-2 text-left flex items-center gap-4 border-b py-1">
-                <img className="w-[50px] h-[50px] object-cover" src={recipe.src}></img>
+              <button
+                onClick={() => {
+                  window.location.assign("/recipes/" + recipe.id);
+                }}
+                className="px-2 text-left flex items-center gap-4 border-b py-1"
+              >
+                <img
+                  className="w-[50px] h-[50px] object-cover"
+                  src={recipe.src}
+                ></img>
                 {recipe.title}
               </button>
             ))}
             <div>
-              <Button variant="transparent" className="w-full" onClick={fetchMoreRecipes}>
+              <Button
+                variant="transparent"
+                className="w-full"
+                onClick={fetchMoreRecipes}
+              >
                 Load More
               </Button>
             </div>
@@ -123,21 +145,23 @@ export default function RecipesSearch() {
         <Heading order={2} style={{ textAlign: "left", width: "100%" }}>
           Trending
         </Heading>
-        <Grid
-          width="100%"
-          columns={{ initial: "1", sm: "2", md: "3", lg: "4" }}
-          gap="3"
-          align={"center"}
-          justify={"center"}
-          style={{ margin: "10px 0" }}
-        >
-          {js.map((recipe, i) => (
-            <RecipeSearchBox
-              recipe={recipe}
-              key={"recipe-" + i} // Consider using a more stable key if possible
-            />
-          ))}
-        </Grid>
+        {trending && (
+          <Grid
+            width="100%"
+            columns={{ initial: "1", sm: "2", md: "3", lg: "4" }}
+            gap="3"
+            align={"center"}
+            justify={"center"}
+            style={{ margin: "10px 0" }}
+          >
+            {js.map((recipe, i) => (
+              <RecipeSearchBox
+                recipe={recipe}
+                key={"recipe-" + i} // Consider using a more stable key if possible
+              />
+            ))}
+          </Grid>
+        )}
         <Button onClick={() => {}} style={{ width: "100px" }}>
           Load More
         </Button>

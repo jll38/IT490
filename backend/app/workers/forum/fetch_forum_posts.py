@@ -4,7 +4,6 @@ import mysql.connector
 from mysql.connector import Error
 from datetime import datetime
 
-
 def fetch_forum_posts(db_config):
     """Retrieve forum posts from the database, including the username of the poster."""
     try:

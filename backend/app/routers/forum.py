@@ -73,3 +73,23 @@ async def view_forum_post(post_id: int = Path(..., description="The ID of the fo
     else:
         detail = response.get("detail", "Failed to fetch forum post")
         raise HTTPException(status_code=404, detail=detail)
+    
+class ForumPostCreateRequest(BaseModel):
+    title: str
+    content: str
+    user_id: int
+
+@router.post("/api/forum/post/create")
+async def create_forum_post(request: ForumPostCreateRequest):
+    rabbitmq_client = RabbitMQ(queue_name='forum_post_create_queue')
+    message = {
+        'title': request.title,
+        'content': request.content,
+        'user_id': request.user_id
+    }
+    response = rabbitmq_client.call(message)
+    rabbitmq_client.close_connection()
+    if response.get("success"):
+        return {"message": "Forum post created successfully", "post_id": response.get("post_id")}
+    else:
+        raise HTTPException(status_code=400, detail="Failed to create forum post")
