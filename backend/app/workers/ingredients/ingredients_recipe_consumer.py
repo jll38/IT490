@@ -3,6 +3,9 @@ import json
 import mysql.connector
 from mysql.connector import Error
 
+from dotenv import load_dotenv
+
+
 def fetch_ingredients_for_recipe(db_config, recipe_id):
     """Fetch ingredients for a specific recipe by recipe_id."""
     try:
@@ -41,6 +44,7 @@ def on_fetch_ingredients_request(ch, method, props, body, db_config):
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 def main():
+    load_dotenv()
     db_config = {
         'host': 'localhost',
         'port': 3306,
