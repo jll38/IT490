@@ -46,7 +46,7 @@ export default function RegisterPage() {
           return null;
         } else {
           window.location.assign("/register/onboarding");
-          localStorage.setItem("user_id", 0);
+          localStorage.setItem("user_id", 1);
           localStorage.setItem("user", username);
           localStorage.setItem("onboarding_complete", false);
         }

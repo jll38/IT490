@@ -42,7 +42,10 @@ export default function LoginPage() {
           console.error("Error logging in User:\n");
           return null;
         } else {
-          return res.json();
+          window.location.assign("/recipes");
+          localStorage.setItem("user_id", 1);
+          localStorage.setItem("user", username);
+          localStorage.setItem("onboarding_complete", true);
         }
       })
       .finally((data) => {
