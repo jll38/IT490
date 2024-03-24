@@ -56,7 +56,7 @@ def main():
         'database': os.getenv('DATABASE')
     }
 
-    connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv('RABBITMQ_HOST')))
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
 
     queue_name = 'forum_post_view_queue'

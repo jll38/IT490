@@ -50,7 +50,7 @@ def main():
     }
 
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(os.getenv('RABBITMQ_HOST')))
+        pika.ConnectionParameters('localhost'))
     channel = connection.channel()
 
     queue_name = 'forum_post_queue'

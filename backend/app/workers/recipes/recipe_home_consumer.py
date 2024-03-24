@@ -104,7 +104,7 @@ def main():
     }
 
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(os.getenv('RABBITMQ_HOST')))
+        pika.ConnectionParameters('localhost'))
     channel = connection.channel()
 
     channel.queue_declare(queue='recipes_trending_queue')
