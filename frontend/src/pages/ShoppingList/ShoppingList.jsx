@@ -10,7 +10,7 @@ export default function ShoppingList() {
   const [ingredientsList, setIngredientsList] = React.useState([]);
 
   React.useEffect(() => {
-    fetch(`${BACKEND}:8000/api/recipes/trending`)
+    fetch(`${BACKEND}/api/recipes/trending`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);

@@ -53,7 +53,7 @@ def main():
         'database': os.getenv('DATABASE')
     }
 
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv('RABBITMQ_HOST')))
     channel = connection.channel()
 
     queue_name = 'ingredients_recipe_queue'

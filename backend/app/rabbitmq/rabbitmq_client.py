@@ -1,9 +1,11 @@
 import pika
 import uuid
 import json
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
 class RabbitMQ:
-    def __init__(self, host='localhost', queue_name='default_queue', username='admin', password='IT490'):
+    def __init__(self, host=os.getenv('RABBITMQ_HOST'), queue_name='default_queue', username=os.getenv('RABBITMQ_USER'), password=os.getenv('RABBITMQ_PASSWORD')):
         self.queue_name = queue_name
         self.connection = pika.BlockingConnection(
             pika.ConnectionParameters(

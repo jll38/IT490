@@ -50,7 +50,7 @@ def main():
     }
 
     # Establish connection to RabbitMQ
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv('RABBITMQ_HOST')))
     channel = connection.channel()
 
     # Ensure the queue exists

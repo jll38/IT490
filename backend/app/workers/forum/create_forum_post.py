@@ -45,15 +45,15 @@ def on_forum_post_create_request(ch, method, props, body, db_config):
 def main():
     load_dotenv()
     db_config = {
-        'host': 'localhost',
+        'host': os.getenv('DATABASE_HOST'),
         'port': 3306,
-        'user': 'admin',
-        'password': 'password',
-        'database': 'recipe_app'
+        'user': os.getenv('DATABASE_USER'),
+        'password': os.getenv('DATABASE_PASSWORD'),
+        'database': os.getenv('DATABASE')
     }
 
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters('localhost'))
+        pika.ConnectionParameters(os.getenv('RABBITMQ_HOST')))
     channel = connection.channel()
 
     queue_name = 'forum_post_create_queue'

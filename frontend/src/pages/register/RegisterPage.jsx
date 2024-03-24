@@ -19,7 +19,7 @@ export default function RegisterPage() {
 
   const [errorMessage, setErrorMessage] = React.useState(null);
 
-  const apiRoute = `${BACKEND}:8000/api/auth/register`;
+  const apiRoute = `${BACKEND}/api/auth/register`;
 
   async function handleSubmit() {
     if (!username || !password || !email) {
