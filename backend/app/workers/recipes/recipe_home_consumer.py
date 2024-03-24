@@ -6,6 +6,7 @@ import mysql.connector
 from mysql.connector import Error
 import json
 from decimal import Decimal
+import os
 from dotenv import load_dotenv
 
 

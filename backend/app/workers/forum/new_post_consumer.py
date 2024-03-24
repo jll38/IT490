@@ -2,6 +2,8 @@ import pika
 import json
 import mysql.connector
 from mysql.connector import Error
+import os
+from dotenv import load_dotenv
 
 def add_forum_post(db_config, title, content, user_id):
     """Insert a new forum post into the database."""
@@ -38,12 +40,13 @@ def on_forum_post_request(ch, method, props, body, db_config):
 
 
 def main():
+    load_dotenv()
     db_config = {
-        'host': 'localhost',
+        'host': os.getenv('DATABASE_HOST'),
         'port': 3306,
-        'user': 'admin',
-        'password': 'password',
-        'database': 'recipe_app'
+        'user': os.getenv('DATABASE_USER'),
+        'password': os.getenv('DATABASE_PASSWORD'),
+        'database': os.getenv('DATABASE')
     }
 
     connection = pika.BlockingConnection(

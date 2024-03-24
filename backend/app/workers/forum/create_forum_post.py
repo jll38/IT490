@@ -3,7 +3,8 @@ import json
 import mysql.connector
 from mysql.connector import Error
 import datetime
-
+import os
+from dotenv import load_dotenv
 
 def insert_forum_post(db_config, post_data):
     """Insert a new forum post into the database."""
@@ -42,6 +43,7 @@ def on_forum_post_create_request(ch, method, props, body, db_config):
 
 
 def main():
+    load_dotenv()
     db_config = {
         'host': 'localhost',
         'port': 3306,

@@ -4,7 +4,8 @@ import mysql.connector
 from mysql.connector import Error
 import json
 from decimal import Decimal
-
+import os
+from dotenv import load_dotenv
 
 class EnhancedJSONEncoder(json.JSONEncoder):
     """A JSON encoder that handles Decimals."""
@@ -62,12 +63,13 @@ def on_fetch_recipe_request(ch, method, props, body, db_config):
 
 
 def main():
+    load_dotenv()
     db_config = {
-        'host': 'localhost',
+        'host': os.getenv('DATABASE_HOST'),
         'port': 3306,
-        'user': 'admin',
-        'password': 'password',
-        'database': 'recipe_app'
+        'user': os.getenv('DATABASE_USER'),
+        'password': os.getenv('DATABASE_PASSWORD'),
+        'database': os.getenv('DATABASE')
     }
 
     connection = pika.BlockingConnection(

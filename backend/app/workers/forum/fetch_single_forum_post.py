@@ -4,6 +4,9 @@ import mysql.connector
 from mysql.connector import Error
 from datetime import datetime
 
+import os
+from dotenv import load_dotenv
+
 def fetch_forum_post_by_id(db_config, post_id):
     """Retrieve a single forum post from the database by its ID, including the author's username."""
     try:
@@ -54,12 +57,13 @@ def on_forum_post_fetch_request(ch, method, props, body, db_config):
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 def main():
+    load_dotenv()
     db_config = {
-        'host': 'localhost',
+        'host': os.getenv('DATABASE_HOST'),
         'port': 3306,
-        'user': 'admin',
-        'password': 'password',
-        'database': 'recipe_app'
+        'user': os.getenv('DATABASE_USER'),
+        'password': os.getenv('DATABASE_PASSWORD'),
+        'database': os.getenv('DATABASE')
     }
 
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
