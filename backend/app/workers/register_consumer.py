@@ -9,7 +9,7 @@ def user_exists(db_config, username, email):
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM Users WHERE name = %s OR email = %s", (username, email))
+        cursor.execute("SELECT * FROM Users WHERE username = %s OR email = %s", (username, email))
         user_record = cursor.fetchone()
         cursor.close()
         conn.close()

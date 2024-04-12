@@ -4,6 +4,7 @@ from .routers.forum import router as forum_router
 from .routers.recipes import router as recipe_router
 from .routers.ingredients import router as ingredients_router
 from fastapi.middleware.cors import CORSMiddleware
+import ssl
 
 app = FastAPI()
 
