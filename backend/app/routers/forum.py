@@ -4,15 +4,24 @@ from app.rabbitmq.rabbitmq_client import RabbitMQ
 
 router = APIRouter()
 
+
+class FormPostVoteRequest(BaseModel):
+    user_id: int
+    post_id: int
+    vote: int
+
+
 class ForumPostCreateRequest(BaseModel):
     title: str
     content: str
     user_id: int
 
+
 class ForumPostCommentRequest(BaseModel):
     post_id: int
     content: str
     user_id: int
+
 
 @router.post("/api/forum/add_post")
 async def add_forum_post(request: ForumPostCreateRequest):
@@ -29,10 +38,11 @@ async def add_forum_post(request: ForumPostCreateRequest):
     else:
         raise HTTPException(status_code=400, detail="Failed to add forum post")
 
+
 @router.get("/api/forum/posts")
 async def view_forum_posts():
     rabbitmq_client = RabbitMQ(queue_name='forum_post_view_queue')
-    message = {}  
+    message = {}
     print(1)
     response = rabbitmq_client.call(message)
     print(2)
@@ -40,7 +50,9 @@ async def view_forum_posts():
     if response.get("success"):
         return response.get("posts", [])
     else:
-        raise HTTPException(status_code=400, detail="Failed to fetch forum posts")
+        raise HTTPException(
+            status_code=400, detail="Failed to fetch forum posts")
+
 
 @router.post("/api/forum/comment")
 async def comment_on_post(request: ForumPostCommentRequest):
@@ -56,6 +68,7 @@ async def comment_on_post(request: ForumPostCommentRequest):
         return {"message": "Comment added successfully"}
     else:
         raise HTTPException(status_code=400, detail="Failed to add comment")
+
 
 @router.get("/api/forum/posts/{post_id}")
 async def view_forum_post(post_id: int = Path(..., description="The ID of the forum post to retrieve")):
@@ -73,11 +86,13 @@ async def view_forum_post(post_id: int = Path(..., description="The ID of the fo
     else:
         detail = response.get("detail", "Failed to fetch forum post")
         raise HTTPException(status_code=404, detail=detail)
-    
+
+
 class ForumPostCreateRequest(BaseModel):
     title: str
     content: str
     user_id: int
+
 
 @router.post("/api/forum/post/create")
 async def create_forum_post(request: ForumPostCreateRequest):
@@ -92,4 +107,22 @@ async def create_forum_post(request: ForumPostCreateRequest):
     if response.get("success"):
         return {"message": "Forum post created successfully", "post_id": response.get("post_id")}
     else:
-        raise HTTPException(status_code=400, detail="Failed to create forum post")
+        raise HTTPException(
+            status_code=400, detail="Failed to create forum post")
+
+
+@router.post("/api/forum/upvote")
+async def vote_forum_post(request: FormPostVoteRequest):
+    rabbitmq_client = RabbitMQ(queue_name='forum_vote_queue')
+    message = {
+        'user_id': request.user_id,
+        'post_id': request.post_id,
+        'vote': request.vote,
+    }
+    response = rabbitmq_client.call(message)
+    rabbitmq_client.close_connection()
+    if response.get("success"):
+        return {"message": f"Forum post voted on successfully", "post_id": response.get("post_id")}
+    else:
+        raise HTTPException(
+            status_code=400, detail="Failed to vote on forum post")

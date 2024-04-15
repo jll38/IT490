@@ -1,9 +1,10 @@
 import threading
 import login_consumer
 import register_consumer
-from forum import new_post_consumer, fetch_forum_posts, fetch_single_forum_post, create_forum_post
+from forum import new_post_consumer, fetch_forum_posts, fetch_single_forum_post, create_forum_post, vote_forum_post
 from recipes import recipe_home_consumer, recipe_page_consumer, recipe_rating_consumer
 from ingredients import ingredients_recipe_consumer
+
 
 def start_login_consumer():
     print("Starting login consumer...")
@@ -44,13 +45,20 @@ def recipe_page():
     print("Starting recipe page consumer...")
     recipe_page_consumer.main()
 
+
 def recipe_rating():
     print("Starting recipe rating consumer...")
     recipe_rating_consumer.main()
 
+
 def ingredients_recipe():
     print("Starting ingredients recipe consumer...")
     ingredients_recipe_consumer.main()
+
+
+def votes_post():
+    print("Starting votes post consumer...")
+    vote_forum_post.main()
 
 
 if __name__ == "__main__":
@@ -66,6 +74,7 @@ if __name__ == "__main__":
     recipe_page_thread = threading.Thread(target=recipe_page)
     recipe_rating_thread = threading.Thread(target=recipe_rating)
     ingredients_recipe_thread = threading.Thread(target=ingredients_recipe)
+    vote_forum_post_thread = threading.Thread(target=votes_post)
 
     login_thread.start()
     register_thread.start()
@@ -77,6 +86,7 @@ if __name__ == "__main__":
     recipe_page_thread.start()
     recipe_rating_thread.start()
     ingredients_recipe_thread.start()
+    vote_forum_post_thread.start()
 
     login_thread.join()
     register_thread.join()
@@ -88,3 +98,4 @@ if __name__ == "__main__":
     recipe_page_thread.join()
     recipe_rating_thread.join()
     ingredients_recipe_thread.join()
+    vote_forum_post_thread.join()

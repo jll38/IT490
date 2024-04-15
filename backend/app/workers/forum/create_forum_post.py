@@ -23,7 +23,6 @@ def insert_forum_post(db_config, post_data):
         print(f"Database error: {e}")
         return None
 
-
 def on_forum_post_create_request(ch, method, props, body, db_config):
     print("Received request to create forum post")
 
