@@ -8,7 +8,7 @@ export function ForumPost({ post }) {
   const [vote, setVote] = React.useState(0);
   const user_id = Number(localStorage.getItem("user_id"));
   const isFirstRender = React.useRef(true);
-
+  const [totalVotes, setTotalVotes] = React.useState(0);
   const handleUpVote = () => {
     if (vote === 1) {
       setVote(0);
@@ -29,6 +29,7 @@ export function ForumPost({ post }) {
     console.log(vote);
     if (isFirstRender.current) {
       isFirstRender.current = false;
+      //Implement fetch for retrieve upvotes for post.
       return; // Skip the effect on the first render
     }
     fetch(`${BACKEND}/api/forum/upvote`, {
@@ -50,7 +51,7 @@ export function ForumPost({ post }) {
         <button onClick={handleUpVote}>
           <ThickArrowUpIcon color={vote === 1 ? "orange" : "gray"} />
         </button>
-        <div>0</div>
+        <div>{totalVotes + vote}</div>
         <button onClick={handleDownVote}>
           <ThickArrowDownIcon color={vote === -1 ? "blue" : "gray"} />
         </button>
