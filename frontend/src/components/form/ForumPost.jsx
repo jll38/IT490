@@ -2,9 +2,13 @@ import React from "react";
 import { isoToReadableDate } from "./../../lib/DateTime";
 import { ThickArrowUpIcon } from "@radix-ui/react-icons";
 import { ThickArrowDownIcon } from "@radix-ui/react-icons";
+import { BACKEND } from "../../lib/constants";
 
 export function ForumPost({ post }) {
   const [vote, setVote] = React.useState(0);
+  const user_id = Number(localStorage.getItem("user_id"));
+  const isFirstRender = React.useRef(true);
+
   const handleUpVote = () => {
     if (vote === 1) {
       setVote(0);
@@ -20,6 +24,25 @@ export function ForumPost({ post }) {
       setVote(-1);
     }
   };
+
+  React.useEffect(() => {
+    console.log(vote);
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return; // Skip the effect on the first render
+    }
+    fetch(`${BACKEND}/api/forum/upvote`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id,
+        post_id: post.post_id,
+        vote
+      }),
+    });
+  }, [vote]);
 
   return (
     <div className="flex items-center w-full">
