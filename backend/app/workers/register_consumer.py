@@ -4,6 +4,7 @@ import mysql.connector
 from mysql.connector import Error
 import os
 from dotenv import load_dotenv
+import bcrypt  # Import bcrypt for hashing and salting passwords
 
 def user_exists(db_config, username, email):
     try:
@@ -16,7 +17,7 @@ def user_exists(db_config, username, email):
         return user_record is not None
     except Error as e:
         print(f"Database error: {e}")
-        return False  #
+        return False
 
 def register_user(db_config, username, email, password):
     """Insert a new user into the database."""
@@ -25,7 +26,12 @@ def register_user(db_config, username, email, password):
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO user (username, email, password_hash) VALUES (%s, %s, %s)", (username, email, password))
+        salt = bcrypt.gensalt()
+        # Hash and salt the password
+        password_hash = bcrypt.hashpw(password.encode('utf-8'), salt)
+
+        cursor.execute("INSERT INTO user (username, email, password_hash, salt) VALUES (%s, %s, %s, %s)",
+                       (username, email, password_hash, salt))
         conn.commit()
         cursor.close()
         conn.close()
