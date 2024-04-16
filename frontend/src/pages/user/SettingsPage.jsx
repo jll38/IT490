@@ -61,7 +61,8 @@ export default function SettingsPage() {
     })
       .then((res) => {
         if (res.ok) {
-          console.log("Saved");
+          alert("Your preferences have been updated and saved.")
+
         } else {
           res
             .json()

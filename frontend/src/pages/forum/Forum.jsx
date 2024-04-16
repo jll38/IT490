@@ -1,13 +1,14 @@
+import { ForumPost } from "./../../components/form/ForumPost";
 import React, { useEffect } from "react";
-import { isoToReadableDate } from "../../lib/DateTime";
 import { BACKEND } from "../../lib/constants";
+
+
 const ForumPage = () => {
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [posts, setPosts] = React.useState([]); 
+  const [posts, setPosts] = React.useState([]);
   const [filteredPosts, setFilteredPosts] = React.useState([]);
 
   useEffect(() => {
-    
     setFilteredPosts(
       searchTerm.length === 0
         ? posts
@@ -52,20 +53,10 @@ const ForumPage = () => {
         </a>
       </div>
       {/* Posts List */}
-      <div className="forum-posts">
+      <div className="forum-posts w-full">
         {filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
-            <a
-              href={`/forum/${post.post_id}`}
-              key={post.post_id}
-              className="block border-b border-gray-200 py-4 hover:bg-gray-100 px-2"
-            >
-              <h2 className="text-xl font-semibold">{post.title}</h2>
-              <p className="text-sm text-gray-500">
-                Posted by u/{post.author} on {isoToReadableDate(post.created_at)}
-              </p>
-              <p className="mt-2">{post.content}</p>
-            </a>
+            <ForumPost post={post} />
           ))
         ) : (
           <p>No posts found.</p>
