@@ -19,10 +19,8 @@ async def register(request: RegisterRequest):
         'email': request.email,
         'password': request.password
     }
-    print(1)
     response = rabbitmq_client.call(message)
     
-    print(3)
     rabbitmq_client.close_connection()
     
     if response.get("success"):
@@ -30,6 +28,22 @@ async def register(request: RegisterRequest):
     else:
         raise HTTPException(status_code=400, detail="Registration failed")
 
+@router.post("/api/auth/register")
+async def onboarding(request):
+    rabbitmq_client = RabbitMQ(queue_name='register_onboarding_queue')
+    
+    message = {
+        'restrictions': request.restrictions,
+        'tdee': request.tdee
+    }
+
+    response = rabbitmq_client.call(message)
+    rabbitmq_client.close_connection()
+    
+    if response.get("success"):
+        return {"message": "Onboarding successful."}
+    else:
+        raise HTTPException(status_code=400, detail="Onboarding failed, please try again later.")
 
 class LoginRequest(BaseModel):
     username: str

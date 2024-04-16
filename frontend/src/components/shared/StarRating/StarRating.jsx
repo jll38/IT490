@@ -27,18 +27,20 @@ export default function StarRating({
   };
 
   React.useEffect(() => {
-    fetch(`${BACKEND}/api/recipes/set-rating`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        recipe_id: recipe.recipe_id,
-        user_id: Number(localStorage.getItem("user_id")),
-        rating,
-      }),
-    });
-  }, [rating]);
+    if(editable){
+      fetch(`${BACKEND}/api/recipes/set-rating`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          recipe_id: recipe.recipe_id,
+          user_id: Number(localStorage.getItem("user_id")),
+          rating,
+        }),
+      });
+    }
+  }, [rating, editable]);
 
   if (recipe)
     return (

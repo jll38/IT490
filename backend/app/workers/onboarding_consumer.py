@@ -9,7 +9,7 @@ def user_exists(db_config, username, email):
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM Users WHERE username = %s OR email = %s", (username, email))
+        cursor.execute("SELECT * FROM Users WHERE username = %s", (username))
         user_record = cursor.fetchone()
         cursor.close()
         conn.close()
@@ -18,14 +18,14 @@ def user_exists(db_config, username, email):
         print(f"Database error: {e}")
         return False  #
 
-def register_user(db_config, username, email, password):
-    """Insert a new user into the database."""
-    if user_exists(db_config, username, email):
-        return False  # User already exists
+def onboard_user(db_config, username, dietary_restrictions, tdee):
+    """Onboard User."""
+    if not user_exists(db_config, username):
+        return False  # User doesn't exist
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO Users (username, email, password_hash) VALUES (%s, %s, %s)", (username, email, password))
+        cursor.execute("UPDATE Users SET (onboarding_complete, dietary_restrictions, TDEE) VALUES (%s, %s, %s) WHERE username = %s", (1, dietary_restrictions, tdee, username))
         conn.commit()
         cursor.close()
         conn.close()
@@ -37,12 +37,12 @@ def register_user(db_config, username, email, password):
 def on_request(ch, method, props, body, db_config):
     request = json.loads(body)
     username = request['username']
-    email = request['email']
-    password = request['password'] 
+    dietary_restrictions = request['dietary_restrictions']
+    tdee = request['tdee'] 
 
     print(f"Received registration request for {username}")
 
-    registration_success = register_user(db_config, username, email, password)
+    registration_success = onboard_user(db_config, username, dietary_restrictions, tdee)
 
     response = json.dumps({'success': registration_success})
     ch.basic_publish(exchange='',

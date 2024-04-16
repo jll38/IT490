@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function TDEECalculator() {
+function TDEECalculator({ setTDEE }) {
   const [unit, setUnit] = useState("metric"); // 'metric' or 'imperial'
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
@@ -11,8 +11,8 @@ function TDEECalculator() {
   const [weightGoal, setWeightGoal] = useState();
 
   React.useEffect(() => {
-    console.log(weightGoal);
-  }, [weightGoal]);
+    setTDEE(tdee);
+  }, [tdee]);
 
   const handleUnitChange = (e) => {
     setUnit(e.target.value);
