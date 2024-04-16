@@ -71,3 +71,27 @@ async def login(request: LoginRequest):
     else:
         raise HTTPException(status_code=400, detail="Login failed")
 
+@router.get("/api/auth/user-settings/{username}")
+async def get_user_settings(username):
+    rabbitmq_client = RabbitMQ(queue_name='settings_queue')
+    response = rabbitmq_client.call({'username': username})
+    rabbitmq_client.close_connection()
+
+    print(f"Response from RabbitMQ: {response}")
+
+    if 'success' in response and response['success']:
+        return response
+    else:
+        raise HTTPException(status_code=400, detail="Failed Retrieving Settings")
+    
+@router.put("/api/auth/user-settings/")
+async def get_user_settings(request: OnboardingRequest):
+    rabbitmq_client = RabbitMQ(queue_name='onboarding_queue')
+    response = rabbitmq_client.call({'username': request.username, 'restrictions': request.restrictions, 'tdee': request.tdee, 'method': 'PUT'})
+    rabbitmq_client.close_connection()
+    print(response)
+    if response["success"]:
+        return response
+    else:
+        raise HTTPException(status_code=400, detail="Failed Retrieving Settings")
+    

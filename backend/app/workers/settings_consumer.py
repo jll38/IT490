@@ -18,39 +18,38 @@ def user_exists(db_config, username):
         print(f"Database error: {e}")
         return False  #
 
-def onboard_user(db_config, username, restrictions, tdee):
+def get_settings(db_config, username):
     if not user_exists(db_config, username):
-        return False  # User already exists
+        return {'success': False}
 
     try:
         conn = mysql.connector.connect(**db_config)
         with conn.cursor() as cursor:
-            cursor.execute("UPDATE Users SET onboarding_complete=%s, dietary_restrictions=%s, TDEE=%s WHERE username=%s", (1, str(restrictions), tdee, username))
-            print(2)
-            conn.commit()
+            cursor.execute("SELECT dietary_restrictions, TDEE FROM Users WHERE username=%s", (username,))
+            user_record = cursor.fetchone()
+            if user_record:
+                return {'success': True, 'dietary_restrictions': user_record[0], 'TDEE': user_record[1]}
+            else:
+                return {'success': False}
     except Error as e:
-        print(f"Database error during onboarding: {e}")
-        return False
+        print(f"Database error retrieving settings: {e}")
+        return {'success': False}
     except Exception as e:
         print(f"Unexpected error: {e}")
-        return False
+        return {'success': False}
     finally:
         conn.close()
-
-    return True
-
 
 def on_request(ch, method, props, body, db_config):
     request = json.loads(body)
     username = request['username']
-    restrictions = request['restrictions']
-    tdee = request['tdee']
+    print(f"Received settings request for {username}")
 
-    print(f"Received onboarding request for {username}")
-
-    registration_success = onboard_user(db_config, username, restrictions, tdee)
-    response = json.dumps({'success': registration_success})
+    settings_response = get_settings(db_config, username)
+    print(f"Settings response: {settings_response}")
+    response = json.dumps(settings_response)
     print(response)
+
     ch.basic_publish(exchange='',
                      routing_key=props.reply_to,
                      properties=pika.BasicProperties(correlation_id=props.correlation_id),

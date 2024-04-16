@@ -16,6 +16,7 @@ import RegisterPage from "./pages/register/RegisterPage";
 import Onboarding from "./pages/onboarding/Onboarding";
 import RecipesSearch from "./pages/recipes/RecipesSearch";
 import Recipe from "./pages/recipes/Recipe";
+import SettingsPage from "./pages/user/SettingsPage";
 
 //Forum
 import ForumPage from "./pages/forum/Forum";
@@ -73,6 +74,7 @@ function App() {
       element: <PostDetailPage />,
     },
     { path: "shopping-list", element: <ShoppingList /> },
+    { path: "settings", element: <SettingsPage /> },
   ]);
   return (
     <main className="App">
