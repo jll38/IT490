@@ -1,6 +1,7 @@
 import threading
 import login_consumer
 import register_consumer
+import onboarding_consumer
 from forum import new_post_consumer, fetch_forum_posts, fetch_single_forum_post, create_forum_post, vote_forum_post
 from recipes import recipe_home_consumer, recipe_page_consumer, recipe_rating_consumer
 from ingredients import ingredients_recipe_consumer
@@ -60,7 +61,11 @@ def votes_post():
     print("Starting votes post consumer...")
     vote_forum_post.main()
 
+def onboarding():
+    print("Starting onboarding consumer...")
+    onboarding_consumer.main(
 
+    )
 if __name__ == "__main__":
     login_thread = threading.Thread(target=start_login_consumer)
     register_thread = threading.Thread(target=start_register_consumer)
@@ -75,6 +80,8 @@ if __name__ == "__main__":
     recipe_rating_thread = threading.Thread(target=recipe_rating)
     ingredients_recipe_thread = threading.Thread(target=ingredients_recipe)
     vote_forum_post_thread = threading.Thread(target=votes_post)
+    onboarding_consumer_thread = threading.Thread(target=onboarding)
+
 
     login_thread.start()
     register_thread.start()
@@ -87,6 +94,7 @@ if __name__ == "__main__":
     recipe_rating_thread.start()
     ingredients_recipe_thread.start()
     vote_forum_post_thread.start()
+    onboarding_consumer_thread.start()
 
     login_thread.join()
     register_thread.join()
@@ -99,3 +107,4 @@ if __name__ == "__main__":
     recipe_rating_thread.join()
     ingredients_recipe_thread.join()
     vote_forum_post_thread.join()
+    onboarding_consumer_thread.join()

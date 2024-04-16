@@ -25,7 +25,7 @@ def register_user(db_config, username, email, password):
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO Users (username, email, password_hash) VALUES (%s, %s, %s)", (username, email, password))
+        cursor.execute("INSERT INTO Users (username, email, password_hash, onboarding_complete) VALUES (%s, %s, %s, %s)", (username, email, password, 0))
         conn.commit()
         cursor.close()
         conn.close()

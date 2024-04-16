@@ -1,27 +1,58 @@
 import React from "react";
 import TDEECalculator from "../../components/TDEE/TDEECalculator";
+import { BACKEND } from "../../lib/constants";
+
 export default function Onboarding() {
   const [user, setUser] = React.useState(localStorage.getItem("user"));
-  const [dietaryRestrictions, setDietRestrictions] = React.useState(null);
+  const [dietaryRestrictions, setDietRestrictions] = React.useState([]);
   const [tdee, setTDEE] = React.useState(null);
 
-  const handleSubmit = () => {
-    fetch("auth/register/onboarding", {
+  const handleChange = (event) => {
+    const { value, checked } = event.target;
+    setDietRestrictions((prev) => {
+      if (checked) {
+        return [...prev, value];
+      } else {
+        return prev.filter((item) => item !== value);
+      }
+    });
+  };
+
+  React.useEffect(() => {console.log(dietaryRestrictions)}, [dietaryRestrictions]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const body = JSON.stringify({
+      username: user,
+      restrictions: dietaryRestrictions,
+      tdee: Math.floor(tdee),
+    });
+    console.log(body);
+    fetch(`${BACKEND}/api/auth/register/onboarding`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        username: user,
-        dietary_restrictions: dietaryRestrictions,
-        tdee,
-      }),
-    }).then((res) => {
-      if (res.ok) {
-        localStorage.setItem("onboarding_complete", true);
-        window.location.assign("/");
-      }
-    });
+      body
+    })
+      .then((res) => {
+        if (res.ok) {
+          localStorage.setItem("onboarding_complete", true);
+          window.location.assign("/");
+        } else {
+          res
+            .json()
+            .then((data) => {
+              console.error("Error:", data.detail || "Failed to onboard");
+            })
+            .catch((error) => {
+              console.error("Failed to parse response:", error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.error("Network error:", error);
+      });
   };
 
   return (
@@ -40,56 +71,35 @@ export default function Onboarding() {
           Dietary Restrictions
         </legend>
         <div class="mt-2 space-y-2">
-          <div>
-            <label class="inline-flex items-center">
-              <input
-                type="checkbox"
-                name="dietaryRestrictions"
-                value="noCarb"
-                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
-              <span class="ml-2">No Carb</span>
-            </label>
-          </div>
-          <div>
-            <label class="inline-flex items-center">
-              <input
-                type="checkbox"
-                name="dietaryRestrictions"
-                value="glutenFree"
-                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
-              <span class="ml-2">Gluten Free</span>
-            </label>
-          </div>
-          <div>
-            <label class="inline-flex items-center">
-              <input
-                type="checkbox"
-                name="dietaryRestrictions"
-                value="kosher"
-                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
-              <span class="ml-2">Kosher</span>
-            </label>
-          </div>
-          <div>
-            <label class="inline-flex items-center">
-              <input
-                type="checkbox"
-                name="dietaryRestrictions"
-                value="kosher"
-                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
-              <span class="ml-2">Halal</span>
-            </label>
-          </div>
+          {[
+            { label: "No Carb", value: "noCarb" },
+            { label: "Gluten Free", value: "glutenFree" },
+            { label: "Kosher", value: "kosher" },
+            { label: "Halal", value: "halal" },
+          ].map((option) => (
+            <div key={option.value}>
+              <label class="inline-flex items-center">
+                <input
+                  type="checkbox"
+                  name="dietaryRestrictions"
+                  value={option.value}
+                  onChange={handleChange}
+                  checked={dietaryRestrictions.includes(option.value)}
+                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                />
+                <span class="ml-2">{option.label}</span>
+              </label>
+            </div>
+          ))}
         </div>
       </fieldset>
       <h3 class="text-xl font-semibold">Calculate your Calories</h3>
       <TDEECalculator setTDEE={setTDEE} />
       <button
         type="submit"
+        onClick={(e) => {
+          handleSubmit(e);
+        }}
         class="mt-6 w-full bg-indigo-600 text-white p-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
       >
         Get Started

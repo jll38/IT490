@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, EmailStr
 from app.rabbitmq.rabbitmq_client import RabbitMQ
+from typing import List
 
 router = APIRouter()
 
@@ -28,15 +29,24 @@ async def register(request: RegisterRequest):
     else:
         raise HTTPException(status_code=400, detail="Registration failed")
 
-@router.post("/api/auth/register")
-async def onboarding(request):
-    rabbitmq_client = RabbitMQ(queue_name='register_onboarding_queue')
+class OnboardingRequest(BaseModel):
+    username: str
+    restrictions: List[str]
+    tdee: int
+
+@router.post("/api/auth/register/onboarding")
+async def onboarding(request: OnboardingRequest):
+    print(request)
+    if not request.username:
+        raise HTTPException(status_code=400, detail="Username is required.")
+
+    rabbitmq_client = RabbitMQ(queue_name='onboarding_queue')
     
     message = {
+        'username': request.username,
         'restrictions': request.restrictions,
         'tdee': request.tdee
     }
-
     response = rabbitmq_client.call(message)
     rabbitmq_client.close_connection()
     
@@ -44,6 +54,7 @@ async def onboarding(request):
         return {"message": "Onboarding successful."}
     else:
         raise HTTPException(status_code=400, detail="Onboarding failed, please try again later.")
+
 
 class LoginRequest(BaseModel):
     username: str
