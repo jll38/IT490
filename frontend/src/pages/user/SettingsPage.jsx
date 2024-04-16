@@ -21,12 +21,22 @@ export default function SettingsPage() {
   React.useEffect(() => {
     fetch(`${BACKEND}/api/auth/user-settings/${user}`).then((res) => {
       if (res.ok) {
-        console.log("Successfully fetched user settings...")
+        console.log("Successfully fetched user settings...");
+        res.json().then((data) => {
+          setDietRestrictions(
+            JSON.parse(data.dietary_restrictions.replace(/'/g, '"'))
+          );
+          setTDEE(data.TDEE);
+        });
       } else {
         res
           .json()
           .then((data) => {
-            console.error("Error:", data.detail || "Failed to retrieve user settings");
+            console.log(data);
+            console.error(
+              "Error:",
+              data.detail || "Failed to retrieve user settings"
+            );
           })
           .catch((error) => {
             console.error("Failed to parse response:", error);
@@ -37,6 +47,35 @@ export default function SettingsPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const body = JSON.stringify({
+      username: user,
+      restrictions: dietaryRestrictions,
+      tdee: Math.floor(tdee),
+    });
+    fetch(`${BACKEND}/api/auth/register/onboarding`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body,
+    })
+      .then((res) => {
+        if (res.ok) {
+          console.log("Saved");
+        } else {
+          res
+            .json()
+            .then((data) => {
+              console.error("Error:", data.detail || "Failed to onboard");
+            })
+            .catch((error) => {
+              console.error("Failed to parse response:", error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.error("Network error:", error);
+      });
   };
 
   return (
@@ -45,6 +84,7 @@ export default function SettingsPage() {
         <h1 className="text-sm text-gray">Settings</h1>
         <PersonIcon style={{ scale: "300%" }} />
         <h2 className="text-3xl">{user}</h2>
+        <h2 className="font-bold">Your Current TDEE is: {tdee}</h2>
         <form class="max-w-lg mx-auto my-4 p-6 bg-white shadow-md rounded-lg">
           <fieldset class="mt-4 mb-4">
             <legend class="text-sm font-medium text-gray-700">
@@ -82,7 +122,7 @@ export default function SettingsPage() {
             }}
             class="mt-6 w-full bg-indigo-600 text-white p-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
           >
-            Get Started
+            Save
           </button>
         </form>
       </section>

@@ -25,7 +25,7 @@ def onboard_user(db_config, username, restrictions, tdee):
     try:
         conn = mysql.connector.connect(**db_config)
         with conn.cursor() as cursor:
-            cursor.execute("UPDATE Users SET onboarding_complete=%s, dietary_restrictions=%s, TDEE=%s WHERE username=%s", (1, str(restrictions), tdee, username))
+            cursor.execute("UPDATE Users SET onboarding_complete=%s, dietary_restrictions=%s, TDEE=%s WHERE username=%s", (1, str(restrictions), int(tdee), username))
             print(2)
             conn.commit()
     except Error as e:
