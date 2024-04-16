@@ -79,11 +79,11 @@ async def get_user_settings(username):
 
     print(f"Response from RabbitMQ: {response}")
 
-    if 'success' in response and response['success']:
+    if response.get('success', False):
         return response
     else:
         raise HTTPException(status_code=400, detail="Failed Retrieving Settings")
-    
+        
 @router.put("/api/auth/user-settings/")
 async def get_user_settings(request: OnboardingRequest):
     rabbitmq_client = RabbitMQ(queue_name='onboarding_queue')

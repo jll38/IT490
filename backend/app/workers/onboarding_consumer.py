@@ -77,7 +77,7 @@ def main():
     channel.basic_qos(prefetch_count=1)
     channel.basic_consume(queue='onboarding_queue', on_message_callback=lambda ch, method, props, body: on_request(ch, method, props, body, db_config))
 
-    print(" [x] Awaiting registration requests")
+    print(" [x] Awaiting onboarding requests")
     channel.start_consuming()
 
 if __name__ == "__main__":

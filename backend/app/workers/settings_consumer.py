@@ -27,6 +27,8 @@ def get_settings(db_config, username):
         with conn.cursor() as cursor:
             cursor.execute("SELECT dietary_restrictions, TDEE FROM Users WHERE username=%s", (username,))
             user_record = cursor.fetchone()
+            print(user_record)
+            print(3)
             if user_record:
                 return {'success': True, 'dietary_restrictions': user_record[0], 'TDEE': user_record[1]}
             else:
@@ -46,9 +48,8 @@ def on_request(ch, method, props, body, db_config):
     print(f"Received settings request for {username}")
 
     settings_response = get_settings(db_config, username)
-    print(f"Settings response: {settings_response}")
     response = json.dumps(settings_response)
-    print(response)
+    print(f"Settings response: {settings_response}")
 
     ch.basic_publish(exchange='',
                      routing_key=props.reply_to,
@@ -71,12 +72,12 @@ def main():
     channel = connection.channel()
 
     # Ensure the queue exists
-    channel.queue_declare(queue='onboarding_queue')
+    channel.queue_declare(queue='settings_queue')
 
     channel.basic_qos(prefetch_count=1)
-    channel.basic_consume(queue='onboarding_queue', on_message_callback=lambda ch, method, props, body: on_request(ch, method, props, body, db_config))
+    channel.basic_consume(queue='settings_queue', on_message_callback=lambda ch, method, props, body: on_request(ch, method, props, body, db_config))
 
-    print(" [x] Awaiting registration requests")
+    print(" [x] Awaiting settings get requests")
     channel.start_consuming()
 
 if __name__ == "__main__":
