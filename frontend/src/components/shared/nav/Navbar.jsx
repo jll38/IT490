@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { Dropdown } from "./profile-dropdown/dropdown";
 import "./Navbar.css";
 
 import { Flex, Text, Button, Link } from "@radix-ui/themes";
@@ -19,16 +20,7 @@ export default function Navbar() {
       </div>
       {user ? (
         <div className="nav-right">
-          <div>{user}</div>
-          <button
-            onClick={() => {
-              localStorage.removeItem("user");
-              localStorage.removeItem("onboarding_complete");
-              window.location.assign("/");
-            }}
-          >
-            Sign Out
-          </button>
+          <Dropdown user={user}/>
         </div>
       ) : (
         <div className="nav-right">
