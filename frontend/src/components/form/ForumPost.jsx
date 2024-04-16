@@ -4,15 +4,32 @@ import { ThickArrowUpIcon } from "@radix-ui/react-icons";
 import { ThickArrowDownIcon } from "@radix-ui/react-icons";
 
 export function ForumPost({ post }) {
+  const [vote, setVote] = React.useState(0);
+  const handleUpVote = () => {
+    if (vote === 1) {
+      setVote(0);
+    } else {
+      setVote(1);
+    }
+  };
+
+  const handleDownVote = () => {
+    if (vote === -1) {
+      setVote(0);
+    } else {
+      setVote(-1);
+    }
+  };
+
   return (
     <div className="flex items-center w-full">
       <div className="flex flex-col items-center">
-        <button>
-          <ThickArrowUpIcon color="orange" />
+        <button onClick={handleUpVote}>
+          <ThickArrowUpIcon color={vote === 1 ? "orange" : "gray"} />
         </button>
         <div>0</div>
-        <button>
-          <ThickArrowDownIcon color="blue"/>
+        <button onClick={handleDownVote}>
+          <ThickArrowDownIcon color={vote === -1 ? "blue" : "gray"} />
         </button>
       </div>
       <a
