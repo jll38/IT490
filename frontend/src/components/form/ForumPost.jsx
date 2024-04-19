@@ -1,37 +1,33 @@
 import React from "react";
 import { isoToReadableDate } from "./../../lib/DateTime";
-import { ThickArrowUpIcon } from "@radix-ui/react-icons";
-import { ThickArrowDownIcon } from "@radix-ui/react-icons";
+import { ThickArrowUpIcon, ThickArrowDownIcon } from "@radix-ui/react-icons";
 import { BACKEND } from "../../lib/constants";
 
 export function ForumPost({ post }) {
-  const [vote, setVote] = React.useState(0);
+  const [vote, setVote] = React.useState(post.current_user_vote || 0);
   const user_id = Number(localStorage.getItem("user_id"));
-  const isFirstRender = React.useRef(true);
-  const [totalVotes, setTotalVotes] = React.useState(0);
+  const [totalVotes, setTotalVotes] = React.useState(post.upvotes - post.downvotes);
+
   const handleUpVote = () => {
     if (vote === 1) {
-      setVote(0);
+      handleVote(0, -1);  // Reset to no vote, decrease total votes if vote was up
     } else {
-      setVote(1);
+      handleVote(1, vote === 0 ? 1 : 2); // New upvote, increase votes. If it was downvoted before, adjust by 2
     }
   };
 
   const handleDownVote = () => {
     if (vote === -1) {
-      setVote(0);
+      handleVote(0, 1); // Reset to no vote, increase total votes if vote was down
     } else {
-      setVote(-1);
+      handleVote(-1, vote === 0 ? -1 : -2); // New downvote, decrease votes. If it was upvoted before, adjust by 2
     }
   };
 
-  React.useEffect(() => {
-    console.log(vote);
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      //Implement fetch for retrieve upvotes for post.
-      return; // Skip the effect on the first render
-    }
+  const handleVote = (newVote, voteChange) => {
+    setVote(newVote);
+    setTotalVotes(totalVotes + voteChange);
+
     fetch(`${BACKEND}/api/forum/upvote`, {
       method: "POST",
       headers: {
@@ -40,10 +36,10 @@ export function ForumPost({ post }) {
       body: JSON.stringify({
         user_id,
         post_id: post.post_id,
-        vote
+        vote: newVote,
       }),
     });
-  }, [vote]);
+  };
 
   return (
     <div className="flex items-center w-full">
@@ -51,7 +47,7 @@ export function ForumPost({ post }) {
         <button onClick={handleUpVote}>
           <ThickArrowUpIcon color={vote === 1 ? "orange" : "gray"} />
         </button>
-        <div>{totalVotes + vote}</div>
+        <div>{totalVotes}</div>
         <button onClick={handleDownVote}>
           <ThickArrowDownIcon color={vote === -1 ? "blue" : "gray"} />
         </button>

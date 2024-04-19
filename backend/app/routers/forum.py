@@ -40,13 +40,12 @@ async def add_forum_post(request: ForumPostCreateRequest):
 
 
 @router.get("/api/forum/posts")
-async def view_forum_posts():
+async def view_forum_posts(user_id: int = None):
     rabbitmq_client = RabbitMQ(queue_name='forum_post_view_queue')
-    message = {}
-    print(1)
+    message = {"user_id": user_id} if user_id else {}
     response = rabbitmq_client.call(message)
-    print(2)
     rabbitmq_client.close_connection()
+
     if response.get("success"):
         return response.get("posts", [])
     else:

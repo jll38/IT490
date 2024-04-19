@@ -2,11 +2,11 @@ import { ForumPost } from "./../../components/form/ForumPost";
 import React, { useEffect } from "react";
 import { BACKEND } from "../../lib/constants";
 
-
 const ForumPage = () => {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [posts, setPosts] = React.useState([]);
   const [filteredPosts, setFilteredPosts] = React.useState([]);
+  const user_id = Number(localStorage.getItem("user_id"));
 
   useEffect(() => {
     setFilteredPosts(
@@ -21,13 +21,13 @@ const ForumPage = () => {
   }, [posts, searchTerm]);
 
   React.useEffect(() => {
-    fetch(`${BACKEND}/api/forum/posts`)
+    fetch(`${BACKEND}/api/forum/posts?user_id=${user_id}`)
       .then((res) => res.json())
       .then((data) => {
         setPosts(data);
         console.log(data);
       });
-  }, []);
+  }, [user_id]);
 
   return (
     <div className="forum-page container mx-auto my-8 p-4">
@@ -55,9 +55,7 @@ const ForumPage = () => {
       {/* Posts List */}
       <div className="forum-posts w-full">
         {filteredPosts.length > 0 ? (
-          filteredPosts.map((post) => (
-            <ForumPost post={post} />
-          ))
+          filteredPosts.map((post) => <ForumPost post={post} />)
         ) : (
           <p>No posts found.</p>
         )}
