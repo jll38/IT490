@@ -4,3 +4,4 @@ fastapi
 mysql-connector-python
 email-validator
 cryptography
+requests
