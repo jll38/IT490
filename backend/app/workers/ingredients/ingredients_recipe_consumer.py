@@ -1,36 +1,31 @@
 import pika
 import json
-import mysql.connector
-from mysql.connector import Error
 import os
 from dotenv import load_dotenv
+import requests
 
-
-def fetch_ingredients_for_recipe(db_config, recipe_id):
-    """Fetch ingredients for a specific recipe by recipe_id."""
+def fetch_ingredients_for_recipe(api_key, recipe_id):
+    """Fetch ingredients for a specific recipe by recipe_id using Spoonacular API."""
+    url = f"https://api.spoonacular.com/recipes/{recipe_id}/ingredientWidget.json"
+    params = {
+        'apiKey': api_key
+    }
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
-        query = """
-        SELECT * FROM Ingredients
-        WHERE recipe_id = %s
-        """
-        cursor.execute(query, (recipe_id,))
-        ingredients = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        return ingredients
-    except Error as e:
-        print(f"Database error: {e}")
+        response = requests.get(url, params=params)
+        response.raise_for_status()  # Raises an HTTPError for bad responses
+        ingredients_data = response.json()
+        return ingredients_data.get('ingredients', [])
+    except requests.RequestException as e:
+        print(f"HTTP request error: {e}")
         return []
 
-def on_fetch_ingredients_request(ch, method, props, body, db_config):
+def on_fetch_ingredients_request(ch, method, props, body, api_key):
     print("Received request for recipe ingredients")
     
     message = json.loads(body)
     recipe_id = message.get('recipe_id')
     
-    ingredients = fetch_ingredients_for_recipe(db_config, recipe_id)
+    ingredients = fetch_ingredients_for_recipe(api_key, recipe_id)
     
     if ingredients:
         response = json.dumps({'success': True, 'ingredients': ingredients})
@@ -45,13 +40,7 @@ def on_fetch_ingredients_request(ch, method, props, body, db_config):
 
 def main():
     load_dotenv()
-    db_config = {
-        'host': os.getenv('DATABASE_HOST'),
-        'port': 3306,
-        'user': os.getenv('DATABASE_USER'),
-        'password': os.getenv('DATABASE_PASSWORD'),
-        'database': os.getenv('DATABASE')
-    }
+    api_key = os.getenv('SPOONACULAR_API_KEY')
 
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
@@ -60,9 +49,9 @@ def main():
     channel.queue_declare(queue=queue_name)
 
     channel.basic_qos(prefetch_count=1)
-    channel.basic_consume(queue=queue_name, on_message_callback=lambda ch, method, props, body: on_fetch_ingredients_request(ch, method, props, body, db_config))
+    channel.basic_consume(queue=queue_name, on_message_callback=lambda ch, method, props, body: on_fetch_ingredients_request(ch, method, props, body, api_key))
 
-    print(f" [x] Awaiting requests for recipe ingredients")
+    print(" [x] Awaiting requests for recipe ingredients")
     channel.start_consuming()
 
 if __name__ == "__main__":
