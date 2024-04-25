@@ -12,12 +12,17 @@ def search_recipes(api_key, query, number=10, offset=0):
         'query': query,
         'number': number,
         'offset': offset,
-        'addRecipeInformation': True 
+        'addRecipeInformation': True,
+        'includeNutrition': 'true'
+        
     }
     try:
+        
         response = requests.get(url, params=params)
+        
         response.raise_for_status()
         search_results = response.json()
+        print(search_results)
         return search_results.get('results', [])
     except requests.RequestException as e:
         print(f"HTTP request error: {e}")

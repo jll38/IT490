@@ -14,9 +14,9 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { BACKEND } from "../../lib/constants";
 
 import "./RecipesSearch.css";
+import SearchBox from "../../components/recipe/RecipeSearchInput";
 
 export default function RecipesSearch() {
-  const [searchTerm, setSearchTerm] = useState("");
   const [trending, setTrending] = useState([]);
   const [currLoadedTrending, setCurrLoadedTrending] = useState(0);
 
@@ -520,62 +520,7 @@ export default function RecipesSearch() {
 
   return (
     <div className="container-search" style={{ padding: "1rem 4rem" }}>
-      <div className="relative">
-        {" "}
-        <Text size={"5"}>
-          <Strong>Recipe Search</Strong>
-        </Text>
-        <TextField.Root className="w-[400px]">
-          <TextField.Slot>
-            <MagnifyingGlassIcon height="16" width="16" />
-          </TextField.Slot>
-          <TextField.Input
-            placeholder="Butter Chicken"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </TextField.Root>
-        {searchTerm && (
-          <div className="absolute border z-50 top-[60px] bg-white w-full">
-            {" "}
-            {trending.map((recipe, i) => {
-              console.log(i)
-              console.log(recipe)
-              return (
-                <button
-                  onClick={() => {
-                    window.location.assign("/recipes/" + recipe.id);
-                  }}
-                  className="px-2 text-left flex items-center gap-4 border-b py-1"
-                >
-                  <img
-                    className="w-[50px] h-[50px] object-cover"
-                    src={recipe.image}
-                  ></img>
-                  <div>
-                    <div>{recipe.title}</div>
-                    <div className="text-xs text-gray-700">
-                      {recipe.preparation_time} Minutes | {recipe.calories} Cals
-                      | {Number(recipe.protein, 0)}g Protein |{" "}
-                      {Number(recipe.carbs, 0)}g Carbs | {Number(recipe.fat, 0)}
-                      g Fat
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-            <div>
-              <Button
-                variant="transparent"
-                className="w-full"
-                onClick={fetchMoreRecipes}
-              >
-                Load More
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
+      <SearchBox/>
       <div className="z-10">
         <Heading order={2} style={{ textAlign: "left", width: "100%" }}>
           Trending
