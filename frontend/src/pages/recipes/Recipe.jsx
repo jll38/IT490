@@ -5,10 +5,10 @@ import StarRating from "../../components/shared/StarRating/StarRating";
 import { BACKEND } from "../../lib/constants";
 export default function Recipe() {
   let { id } = useParams();
-  const [recipe, setRecipe] = useState();
+  
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-
+  const [recipe, setRecipe] = useState(null);
   useEffect(() => {
     fetch(`${BACKEND}/api/recipes/${id}`)
       .then((res) => {
@@ -20,6 +20,7 @@ export default function Recipe() {
       .then((data) => {
         setRecipe(data);
         setIsLoading(false);
+        console.log(data);
       })
       .catch((error) => {
         setError(error.message);
@@ -35,31 +36,47 @@ export default function Recipe() {
     return <div>Error: {error}</div>;
   }
 
-  if (!recipe) {
+  if (!recipe && !isLoading) {
     return <div>Recipe not found</div>;
   }
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-4">{recipe.recipe_name}</h1>
+      <h1 className="text-3xl font-bold mb-4">{recipe.title}</h1>
       <img
-        src={recipe.image_url}
-        alt={recipe.recipe_name}
+        src={recipe.image}
+        alt={recipe.title}
         className="w-full max-w-md max-h-[300px] h-auto rounded-lg object-fill"
       />
+      <p>Serves: {recipe.servings}</p>
       <StarRating
         editable={false}
         level={recipe.average_rating}
         recipe={recipe}
       />
       <StarRating editable={true} level={5} recipe={recipe} />
+      <h2 className="text-2xl font-bold mt-6 mb-2">Summary</h2>
+      <div dangerouslySetInnerHTML={{ __html: recipe.summary }}></div>
+      <h2 className="text-2xl font-bold mt-6 mb-2">Instructions</h2>
       <p className="mt-4">{recipe.instructions}</p>
       <h2 className="text-2xl font-bold mt-6 mb-2">Nutrition Facts</h2>
       <ul>
-        <li>Calories: {recipe.calories}</li>
-        <li>Protein: {Number(recipe.protein, 0)}g</li>
-        <li>Fat: {Number(recipe.fat, 0)}g</li>
-        <li>Carbs: {Number(recipe.carbs, 0)}g</li>
+        <li>
+          {recipe.nutrition.nutrients[0].name}:{" "}
+          {Math.ceil(recipe.nutrition.nutrients[0].amount)}
+        </li>
+        <li>
+          {recipe.nutrition.nutrients[8].name}:{" "}
+          {Math.floor(recipe.nutrition.nutrients[8].amount)}g
+        </li>
+        <li>
+          {recipe.nutrition.nutrients[3].name}:{" "}
+          {Math.floor(recipe.nutrition.nutrients[3].amount)}g
+        </li>
+        <li>
+          {recipe.nutrition.nutrients[1].name}:{" "}
+          {Math.floor(recipe.nutrition.nutrients[1].amount)}g
+        </li>
       </ul>
     </div>
   );

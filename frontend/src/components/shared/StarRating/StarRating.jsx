@@ -11,7 +11,7 @@ export default function StarRating({
   level = 0,
   recipe,
 }) {
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(level);
   const [hoverRating, setHoverRating] = useState(0);
 
   const handleMouseOver = (newHoverRating) => {
@@ -24,23 +24,21 @@ export default function StarRating({
 
   const handleClick = (newRating) => {
     setRating(newRating);
-  };
-
-  React.useEffect(() => {
-    if(editable){
+  
+    if (editable) {
       fetch(`${BACKEND}/api/recipes/set-rating`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          recipe_id: recipe.recipe_id,
+          recipe_id: recipe.id,
           user_id: Number(localStorage.getItem("user_id")),
-          rating,
+          rating: newRating,
         }),
       });
     }
-  }, [rating, editable]);
+  };
 
   if (recipe)
     return (
