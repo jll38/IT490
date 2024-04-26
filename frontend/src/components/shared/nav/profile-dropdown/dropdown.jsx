@@ -35,8 +35,7 @@ export const Dropdown = ({user}) => {
           <DropdownMenu.Item className="DropdownMenuItem" asChild>
           <button
             onClick={() => {
-              localStorage.removeItem("user");
-              localStorage.removeItem("onboarding_complete");
+              localStorage.removeItem('access_token');
               window.location.assign("/");
             }}
           >

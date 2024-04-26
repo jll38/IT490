@@ -11,12 +11,13 @@ import {
 import { User, Key } from "tabler-icons-react";
 
 import { BACKEND } from "../../lib/constants";
-
+import { User as ExistingUser } from "../../lib/token";
 export default function LoginPage() {
   const [username, setUsername] = React.useState(null);
   const [password, setPassword] = React.useState(null);
 
   const [errorMessage, setErrorMessage] = React.useState(null);
+  if (ExistingUser) return window.location.assign("/recipes");
 
   const apiRoute = `${BACKEND}/api/auth/login`;
   async function handleSubmit() {

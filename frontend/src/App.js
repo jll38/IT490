@@ -6,6 +6,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Navbar from "./components/shared/nav/Navbar";
 import SubNav from "./components/shared/nav/SubNav";
 
+import { RouteGuard } from "./RouteGuard";
+
 //Pages Imports
 import HomePage from "./pages/HomePage";
 import IngredientPage from "./pages/ingredient/IngredientPage";
@@ -41,40 +43,68 @@ function App() {
     },
     {
       path: "register/onboarding",
-      element: <Onboarding />,
-    },
-    {
-      path: "ingredients",
-      element: <IngredientPage />,
-      children: [{ path: ":id" }],
-    },
-    {
-      path: "ingredients/:id",
-      element: <Recipe />,
-      children: [{ path: ":id" }],
+      element: (
+        <RouteGuard>
+          <Onboarding />
+        </RouteGuard>
+      ),
     },
     {
       path: "recipes",
-      element: <RecipesSearch />,
+      element: (
+        <RouteGuard>
+          <RecipesSearch />
+        </RouteGuard>
+      ),
     },
     {
       path: "recipes/:id",
-      element: <Recipe />,
+      element: (
+        <RouteGuard>
+          <Recipe />
+        </RouteGuard>
+      ),
     },
     {
       path: "forum",
-      element: <ForumPage />,
+      element: (
+        <RouteGuard>
+          <ForumPage />
+        </RouteGuard>
+      ),
     },
     {
       path: "forum/create-post",
-      element: <CreatePostPage />,
+      element: (
+        <RouteGuard>
+          <CreatePostPage />
+        </RouteGuard>
+      ),
     },
     {
       path: "forum/:id",
-      element: <PostDetailPage />,
+      element: (
+        <RouteGuard>
+          <PostDetailPage />
+        </RouteGuard>
+      ),
     },
-    { path: "shopping-list", element: <ShoppingList /> },
-    { path: "settings", element: <SettingsPage /> },
+    {
+      path: "shopping-list",
+      element: (
+        <RouteGuard>
+          <ShoppingList />
+        </RouteGuard>
+      ),
+    },
+    {
+      path: "settings",
+      element: (
+        <RouteGuard>
+          <SettingsPage />
+        </RouteGuard>
+      ),
+    },
   ]);
   return (
     <main className="App">

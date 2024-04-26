@@ -62,7 +62,6 @@ def on_forum_post_select_request(ch, method, props, body, db_config):
     request = json.loads(body)
     user_id = request['user_id']
     posts = fetch_forum_posts(db_config, user_id)
-    
     response = json.dumps(
         {'success': True, 'posts': posts}, cls=DateTimeEncoder)
     ch.basic_publish(exchange='',

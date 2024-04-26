@@ -45,11 +45,22 @@ def get_user_info(db_config, username):
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor(dictionary=True)
         cursor.execute(
-            "SELECT user_id, email FROM Users WHERE username = %s", (username,))
+            "SELECT user_id, email, dietary_restrictions FROM Users WHERE username = %s", (username,))
         user_record = cursor.fetchone()
         cursor.close()
         conn.close()
-        return {'username': username, 'user_id': user_record['user_id'], 'email': user_record['email']}
+
+        if user_record:
+            return {
+                'username': username,
+                'user_id': user_record['user_id'],
+                'email': user_record['email'],
+                'dietary_restrictions': str(user_record['dietary_restrictions']).strip('[]').split(', ')
+            }
+        else:
+            # User not found, return an empty dictionary or raise an exception
+            return {}
+
     except Error as e:
         print(f"Database error: {e}")
 
@@ -64,7 +75,7 @@ def on_request(ch, method, props, body, db_config):
     login_success = validate_user_credentials(db_config, username, password)
     token = create_access_token(get_user_info(db_config, username))
     response = json.dumps(
-        {'success': login_success, 'token': token })
+        {'success': login_success, 'token': token})
     # Send response back to the callback queue
     ch.basic_publish(exchange='',
                      routing_key=props.reply_to,

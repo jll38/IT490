@@ -1,13 +1,12 @@
 import { ForumPost } from "./../../components/form/ForumPost";
 import React, { useEffect } from "react";
 import { BACKEND } from "../../lib/constants";
-
+import { User } from "../../lib/token";
 const ForumPage = () => {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [posts, setPosts] = React.useState([]);
   const [filteredPosts, setFilteredPosts] = React.useState([]);
-  const user_id = Number(localStorage.getItem("user_id"));
-
+  console.log(User)
   useEffect(() => {
     setFilteredPosts(
       searchTerm.length === 0
@@ -21,13 +20,13 @@ const ForumPage = () => {
   }, [posts, searchTerm]);
 
   React.useEffect(() => {
-    fetch(`${BACKEND}/api/forum/posts?user_id=${user_id}`)
+    fetch(`${BACKEND}/api/forum/posts?user_id=${User.user_id}`)
       .then((res) => res.json())
       .then((data) => {
         setPosts(data);
         console.log(data);
       });
-  }, [user_id]);
+  }, [User.user_id]);
 
   return (
     <div className="forum-page container mx-auto my-8 p-4">

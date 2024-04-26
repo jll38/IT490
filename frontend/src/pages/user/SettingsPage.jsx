@@ -2,8 +2,8 @@ import React from "react";
 import { PersonIcon } from "@radix-ui/react-icons";
 import TDEECalculator from "../../components/TDEE/TDEECalculator";
 import { BACKEND } from "../../lib/constants";
+import { User } from "../../lib/token";
 export default function SettingsPage() {
-  const [user, setUser] = React.useState(localStorage.getItem("user"));
   const [dietaryRestrictions, setDietRestrictions] = React.useState([]);
   const [tdee, setTDEE] = React.useState(null);
 
@@ -19,7 +19,7 @@ export default function SettingsPage() {
   };
 
   React.useEffect(() => {
-    fetch(`${BACKEND}/api/auth/user-settings/${user}`).then((res) => {
+    fetch(`${BACKEND}/api/auth/user-settings/${User.user_id}`).then((res) => {
       if (res.ok) {
         console.log("Successfully fetched user settings...");
         res.json().then((data) => {
@@ -48,7 +48,7 @@ export default function SettingsPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const body = JSON.stringify({
-      username: user,
+      username: User.username,
       restrictions: dietaryRestrictions,
       tdee: Math.floor(tdee),
     });
@@ -84,7 +84,7 @@ export default function SettingsPage() {
       <section className="p-8 text-black/[0.87] flex-col flex gap-4 items-center w-full min-[0px]:pb-16  min-[576px]:pb-16 min-[992px]:pb-20">
         <h1 className="text-sm text-gray">Settings</h1>
         <PersonIcon style={{ scale: "300%" }} />
-        <h2 className="text-3xl">{user}</h2>
+        <h2 className="text-3xl">{User.username}</h2>
         <h2 className="font-bold">Your Current TDEE is: {tdee}</h2>
         <form class="max-w-lg mx-auto my-4 p-6 bg-white shadow-md rounded-lg">
           <fieldset class="mt-4 mb-4">

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { BACKEND } from "../../lib/constants";
+import { User } from "../../lib/token";
 const CreatePostPage = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -13,7 +14,7 @@ const CreatePostPage = () => {
       body: JSON.stringify({
         title,
         content,
-        user_id: Number(localStorage.getItem("user_id")),
+        user_id: Number(User.user_id),
       }),
     }).then((res) => {
       if (res.ok) {

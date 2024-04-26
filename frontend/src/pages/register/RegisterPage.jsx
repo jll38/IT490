@@ -9,18 +9,20 @@ import {
   Heading,
 } from "@radix-ui/themes";
 import { User, Key, Mail } from "tabler-icons-react";
+import { Navigate } from "react-router-dom";
 
 import { BACKEND } from "../../lib/constants";
+import { User as ExistingUser } from "../../lib/token";
 
 export default function RegisterPage() {
+
   const [username, setUsername] = React.useState(null);
   const [email, setEmail] = React.useState(null);
   const [password, setPassword] = React.useState(null);
 
   const [errorMessage, setErrorMessage] = React.useState(null);
-
+  if(ExistingUser) return window.location.assign('/recipes');
   const apiRoute = `${BACKEND}/api/auth/register`;
-
   async function handleSubmit() {
     if (!username || !password || !email) {
       setErrorMessage("Missing Required Field(s)");
@@ -46,8 +48,6 @@ export default function RegisterPage() {
           return null;
         } else {
           window.location.assign("/register/onboarding");
-          localStorage.setItem("user_id", 1);
-          localStorage.setItem("user", username);
           localStorage.setItem("onboarding_complete", false);
         }
       })

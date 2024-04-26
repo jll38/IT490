@@ -5,6 +5,8 @@ import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
 
 import { BACKEND } from "../../../lib/constants";
 
+import { User } from "../../../lib/token";
+
 export default function StarRating({
   totalStars = 5,
   editable = true,
@@ -33,7 +35,7 @@ export default function StarRating({
         },
         body: JSON.stringify({
           recipe_id: recipe.id,
-          user_id: Number(localStorage.getItem("user_id")),
+          user_id: User.user_id,
           rating: newRating,
         }),
       });
