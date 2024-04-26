@@ -13,8 +13,8 @@ def fetch_trending_recipes():
         "apiKey": os.getenv("SPOONACULAR_API_KEY"),
         "sort": "trending",
         "addRecipeInformation": True,
-        "number": 10,  # Adjust as needed
-        "includeNutriton": 'true'
+        "number": 10,
+        "includeNutrition": 'true'
     }
     response = requests.get(url, params=params)
     response.raise_for_status()
@@ -27,42 +27,44 @@ def fetch_recent_recipes():
         "apiKey": os.getenv("SPOONACULAR_API_KEY"),
         "sort": "date",
         "addRecipeInformation": True,
-        "number": 10,  # Adjust as needed
-        "includeNutriton": 'true'
+        "number": 10,
+        "includeNutrition": 'true'
     }
     response = requests.get(url, params=params)
     response.raise_for_status()
     return response.json().get("results", [])
 
 
-def fetch_reviews_from_db(recipe_id, db_config):
-    """Fetch reviews from the database for a given recipe ID."""
+def fetch_average_rating_from_db(recipe_id, db_config):
+    """Fetch the average rating from the database for a given recipe ID."""
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor(dictionary=True)
         query = """
-            SELECT *
+            SELECT AVG(rating) as average_rating
             FROM Ratings
             WHERE recipe_id = %s
         """
         cursor.execute(query, (recipe_id,))
-        reviews = cursor.fetchall()
+        average_rating_result = cursor.fetchone()
+        # Convert Decimal to float for JSON serialization
+        average_rating = float(
+            average_rating_result['average_rating']) if average_rating_result['average_rating'] is not None else None
         cursor.close()
         conn.close()
-        return reviews
+        return average_rating
     except Error as e:
         print(f"Database error: {e}")
-        return []
+        return None
 
 
 def on_fetch_trending_request(ch, method, props, body, db_config):
     print("Received request for trending recipes")
-    print(f"Message properties: {props.reply_to}")
     recipes = fetch_trending_recipes()
     for recipe in recipes:
         recipe_id = recipe.get("id")
-        reviews = fetch_reviews_from_db(recipe_id, db_config)
-        recipe["reviews"] = reviews
+        average_rating = fetch_average_rating_from_db(recipe_id, db_config)
+        recipe["average_rating"] = average_rating if average_rating else None
     response = json.dumps({"success": True, "recipes": recipes})
 
     ch.basic_publish(exchange="",
@@ -72,13 +74,14 @@ def on_fetch_trending_request(ch, method, props, body, db_config):
                      body=response)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
+
 def on_fetch_recent_request(ch, method, props, body, db_config):
     print("Received request for recent recipes")
     recipes = fetch_recent_recipes()
     for recipe in recipes:
         recipe_id = recipe.get("id")
-        reviews = fetch_reviews_from_db(recipe_id, db_config)
-        recipe["reviews"] = reviews
+        average_rating = fetch_average_rating_from_db(recipe_id, db_config)
+        recipe["average_rating"] = average_rating if average_rating else None
     response = json.dumps({"success": True, "recipes": recipes})
 
     ch.basic_publish(exchange="",

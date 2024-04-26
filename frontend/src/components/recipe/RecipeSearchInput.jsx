@@ -29,7 +29,7 @@ function SearchBox({
     if (response.ok) {
       const data = await response.json();
       setResults(data);
-      onResults(data); // Pass the data to the parent component or handle it here
+      onResults(data); 
     } else {
       console.error("Failed to fetch recipes");
       onResults([]); // Handle error state appropriately

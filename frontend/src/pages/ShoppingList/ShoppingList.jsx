@@ -1,4 +1,3 @@
-// pages/ShoppingList.js
 import React from "react";
 import { BACKEND } from "../../lib/constants";
 import SearchBoxShoppingList from "../../components/recipe/RecipeSearchInputShoppingList";
