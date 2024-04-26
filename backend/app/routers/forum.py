@@ -125,3 +125,24 @@ async def vote_forum_post(request: FormPostVoteRequest):
     else:
         raise HTTPException(
             status_code=400, detail="Failed to vote on forum post")
+
+class ForumCommentCreateRequest(BaseModel):
+    post_id: int
+    content: str
+    user_id: int
+
+@router.post("/api/forum/comment/create")
+async def create_forum_comment(request: ForumCommentCreateRequest):
+    rabbitmq_client = RabbitMQ(queue_name='forum_comment_create_queue')
+    message = {
+        'post_id': request.post_id,
+        'content': request.content,
+        'user_id': request.user_id
+    }
+    response = rabbitmq_client.call(message)
+    rabbitmq_client.close_connection()
+
+    if response.get("success"):
+        return {"message": "Forum comment created successfully", "comment_id": response.get("comment_id")}
+    else:
+        raise HTTPException(status_code=400, detail="Failed to create forum comment")

@@ -3,7 +3,7 @@ import login_consumer
 import register_consumer
 import onboarding_consumer
 import settings_consumer
-from forum import new_post_consumer, fetch_forum_posts, fetch_single_forum_post, create_forum_post, vote_forum_post
+from forum import new_post_consumer, fetch_forum_posts, fetch_single_forum_post, create_forum_post, vote_forum_post, create_form_comment
 from recipes import recipe_home_consumer, recipe_page_consumer, recipe_rating_consumer, recipe_search_consumer
 from ingredients import ingredients_recipe_consumer
 
@@ -75,6 +75,11 @@ def settings():
     print("Starting settings consumer...")
     settings_consumer.main()
 
+def post_forum_comment():
+    print("Starting post forum comment consumer...")
+    create_form_comment.main()
+
+
 if __name__ == "__main__":
     login_thread = threading.Thread(target=start_login_consumer)
     register_thread = threading.Thread(target=start_register_consumer)
@@ -92,6 +97,7 @@ if __name__ == "__main__":
     onboarding_consumer_thread = threading.Thread(target=onboarding)
     settings_consumer_thread = threading.Thread(target=settings)
     recipe_search_thread = threading.Thread(target=recipe_search)
+    post_forum_comment_thread = threading.Thread(target=post_forum_comment)
 
     login_thread.start()
     register_thread.start()
@@ -107,6 +113,7 @@ if __name__ == "__main__":
     onboarding_consumer_thread.start()
     settings_consumer_thread.start()
     recipe_search_thread.start()
+    post_forum_comment_thread.start()
     
 
     login_thread.join()
@@ -123,3 +130,4 @@ if __name__ == "__main__":
     onboarding_consumer_thread.join()
     settings_consumer_thread.join()
     recipe_search_thread.join()
+    post_forum_comment_thread.join()
