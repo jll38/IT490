@@ -36,7 +36,7 @@ export default function Recipe() {
     return <div>Error: {error}</div>;
   }
 
-  if (!recipe) {
+  if (!recipe && !isLoading) {
     return <div>Recipe not found</div>;
   }
 

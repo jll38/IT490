@@ -1,103 +1,57 @@
+// pages/ShoppingList.js
 import React from "react";
-import { Button, TextField, Heading } from "@radix-ui/themes";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-
 import { BACKEND } from "../../lib/constants";
+import SearchBoxShoppingList from "../../components/recipe/RecipeSearchInputShoppingList";
+import { Button } from "@radix-ui/themes";
 
 export default function ShoppingList() {
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [trending, setTrending] = React.useState([]);
   const [ingredientsList, setIngredientsList] = React.useState([]);
-
-  React.useEffect(() => {
-    fetch(`${BACKEND}/api/recipes/trending`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setTrending(data);
-      });
-  }, []);
-
-  const filteredRecipes = trending.filter((recipe) =>
-    recipe.recipe_name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const [ingredients, setIngredients] = React.useState([]);
+  const [selectedIngredients, setSelectedIngredients] = React.useState([]);
 
   const addValues = (recipe_id) => {
     fetch(`${BACKEND}/api/ingredients/recipe/` + recipe_id)
       .then((res) => res.json())
       .then((data) => {
-        setIngredientsList((ingredientsList) => [...ingredientsList, ...data]);
-        setSearchTerm("");
+        setIngredientsList((prev) => [...prev, ...data]);
       });
   };
 
-  const removeValues = (valuesToRemove) => {
-    setIngredients((currentArray) =>
-      currentArray.filter((item) => !valuesToRemove.includes(item))
-    );
+  const onIngredientClick = (ingredientName) => {
+    if (selectedIngredients.includes(ingredientName)) {
+      setSelectedIngredients(selectedIngredients.filter(name => name !== ingredientName));
+    } else {
+      setSelectedIngredients([...selectedIngredients, ingredientName]);
+    }
   };
 
   return (
-    <div className="pageContainer">
-      <Heading>Shopping List Creator</Heading>
-      <div
-        style={{
-          width: "100%",
-          display: "relative",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <TextField.Root className="w-[400px]">
-          <TextField.Slot>
-            <MagnifyingGlassIcon height="16" width="16" />
-          </TextField.Slot>
-          <TextField.Input
-            placeholder="Search recipes..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </TextField.Root>
-        <ul
-          className={`bg-white border-2 ${
-            searchTerm ? "absolute" : "hidden"
-          } top-[140px]`}
+    <div className="pageContainer flex justify-center w-full p-12">
+      <div className="max-w-[1000px] w-[100%]">
+        <h1 className="text-center font-bold text-2xl">
+          Shopping List Creator
+        </h1>
+        <SearchBoxShoppingList onRecipeSelect={addValues} />
+        <Button
+          onClick={() => {
+            setIngredientsList([]);
+            setSelectedIngredients([]); 
+          }}
         >
-          {filteredRecipes.map((recipe) => (
-            <li
-              key={recipe.id}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: "400px",
-                alignItems: "center",
-                padding: 4,
-              }}
-            >
-              {recipe.recipe_name}{" "}
-              <Button
-                style={{ maxWidth: "50px" }}
-                onClick={() => addValues(recipe.recipe_id)}
+          Clear Shopping List
+        </Button>
+        <div>
+          <ul className="flex flex-col gap-2">
+            {ingredientsList.map((ingredient, index) => (
+              <li
+                className={`cursor-pointer rounded-md p-2 max-w-[400px] ${selectedIngredients.includes(ingredient.name) ? 'bg-green-200' : 'bg-gray-200'}`}
+                key={index}
+                onClick={() => onIngredientClick(ingredient.name)}
               >
-                +
-              </Button>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <h2>Shopping List</h2>
-        <ul>
-          {ingredientsList.map((ingredient, index) => (
-            <li key={index}>
-              {ingredient.name}{" "}
-              {/* Adjusted to display the ingredient's name */}
-            </li>
-          ))}
-        </ul>
+                {ingredient.name}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
