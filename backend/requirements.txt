@@ -5,3 +5,6 @@ mysql-connector-python
 email-validator
 cryptography
 requests
+pyjwt
+python-dotenv
+bcrypt

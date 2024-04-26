@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { isoToReadableDate } from "../../lib/DateTime";
 import { BACKEND } from "../../lib/constants";
+import { User } from "../../lib/token";
 const PostDetailPage = () => {
   const { id } = useParams();
   console.log(id);
@@ -12,11 +13,10 @@ const PostDetailPage = () => {
 
   //Fetch post and comments
   useEffect(() => {
-
     // Fetch post details
     fetch(`${BACKEND}/api/forum/posts/${id}`) // Adjust the API endpoint as needed
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         console.log("Fetched data...");
         console.log(data);
         setPost(data);
@@ -30,7 +30,7 @@ const PostDetailPage = () => {
     event.preventDefault();
     // Simulate posting a new comment
     console.log("Submitting comment", newComment);
-    setNewComment(""); 
+    setNewComment("");
   };
 
   if (!post) return <div>Loading...</div>;
@@ -56,7 +56,7 @@ const PostDetailPage = () => {
           ) : (
             <p>No comments yet.</p>
           )}
-          <form onSubmit={handleSubmitComment} className="mt-4">
+          {User ? <form onSubmit={handleSubmitComment} className="mt-4">
             <textarea
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
@@ -70,7 +70,7 @@ const PostDetailPage = () => {
             >
               Submit Comment
             </button>
-          </form>
+          </form> : <p>Please log in to comment on this post</p>}
         </div>
       </div>
     )

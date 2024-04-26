@@ -2,15 +2,17 @@ import React from "react";
 import { isoToReadableDate } from "./../../lib/DateTime";
 import { ThickArrowUpIcon, ThickArrowDownIcon } from "@radix-ui/react-icons";
 import { BACKEND } from "../../lib/constants";
-
+import { User } from "../../lib/token";
 export function ForumPost({ post }) {
   const [vote, setVote] = React.useState(post.current_user_vote || 0);
-  const user_id = Number(localStorage.getItem("user_id"));
-  const [totalVotes, setTotalVotes] = React.useState(post.upvotes - post.downvotes);
+
+  const [totalVotes, setTotalVotes] = React.useState(
+    post.upvotes - post.downvotes
+  );
 
   const handleUpVote = () => {
     if (vote === 1) {
-      handleVote(0, -1);  // Reset to no vote, decrease total votes if vote was up
+      handleVote(0, -1); // Reset to no vote, decrease total votes if vote was up
     } else {
       handleVote(1, vote === 0 ? 1 : 2); // New upvote, increase votes. If it was downvoted before, adjust by 2
     }
@@ -34,7 +36,7 @@ export function ForumPost({ post }) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        user_id,
+        user_id: User.user_id,
         post_id: post.post_id,
         vote: newVote,
       }),
@@ -44,11 +46,11 @@ export function ForumPost({ post }) {
   return (
     <div className="flex items-center w-full">
       <div className="flex flex-col items-center">
-        <button onClick={handleUpVote}>
+        <button onClick={handleUpVote} disabled={User === null}>
           <ThickArrowUpIcon color={vote === 1 ? "orange" : "gray"} />
         </button>
         <div>{totalVotes}</div>
-        <button onClick={handleDownVote}>
+        <button onClick={handleDownVote} disabled={User === null}>
           <ThickArrowDownIcon color={vote === -1 ? "blue" : "gray"} />
         </button>
       </div>

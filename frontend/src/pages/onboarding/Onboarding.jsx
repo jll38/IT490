@@ -1,9 +1,8 @@
 import React from "react";
 import TDEECalculator from "../../components/TDEE/TDEECalculator";
 import { BACKEND } from "../../lib/constants";
-
+import { User } from "../../lib/token";
 export default function Onboarding() {
-  const [user, setUser] = React.useState(localStorage.getItem("user"));
   const [dietaryRestrictions, setDietRestrictions] = React.useState([]);
   const [tdee, setTDEE] = React.useState(null);
 
@@ -23,7 +22,7 @@ export default function Onboarding() {
   const handleSubmit = (e) => {
     e.preventDefault()
     const body = JSON.stringify({
-      username: user,
+      username: User.username,
       restrictions: dietaryRestrictions,
       tdee: Math.floor(tdee),
     });
@@ -59,7 +58,7 @@ export default function Onboarding() {
     <form class="max-w-lg mx-auto my-4 p-6 bg-white shadow-md rounded-lg">
       <div>
         <h2 class="text-2xl font-semibold">
-          Welcome to RecipeApp, {user || "undefined"}!
+          Welcome to RecipeApp, {User.username || "undefined"}!
         </h2>
         <div className="block text-sm font-medium text-gray-700">
           Let's get you started

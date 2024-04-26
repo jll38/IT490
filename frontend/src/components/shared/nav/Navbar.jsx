@@ -4,23 +4,19 @@ import { Dropdown } from "./profile-dropdown/dropdown";
 import "./Navbar.css";
 
 import { Flex, Text, Button, Link } from "@radix-ui/themes";
+import { User } from "../../../lib/token";
 
 export default function Navbar() {
-  const user = localStorage.getItem("user");
-  const onboarding_complete = Boolean(
-    localStorage.getItem("onboarding_complete")
-  );
-
   return (
     <nav>
       <div className="nav-left">
         <Link href="/" className="nav">
-          Recipe App
+          Nutripal
         </Link>
       </div>
-      {user ? (
+      {User ? (
         <div className="nav-right">
-          <Dropdown user={user}/>
+          <Dropdown user={User.username}/>
         </div>
       ) : (
         <div className="nav-right">

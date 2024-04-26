@@ -11,12 +11,13 @@ import {
 import { User, Key } from "tabler-icons-react";
 
 import { BACKEND } from "../../lib/constants";
-
+import { User as ExistingUser } from "../../lib/token";
 export default function LoginPage() {
   const [username, setUsername] = React.useState(null);
   const [password, setPassword] = React.useState(null);
 
   const [errorMessage, setErrorMessage] = React.useState(null);
+  if (ExistingUser) return window.location.assign("/recipes");
 
   const apiRoute = `${BACKEND}/api/auth/login`;
   async function handleSubmit() {
@@ -37,19 +38,18 @@ export default function LoginPage() {
         password,
       }),
     })
-      .then((res) => {
-        if (!res.ok) {
-          console.error("Error logging in User:\n");
-          return null;
-        } else {
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.access_token) {
+          localStorage.setItem("access_token", data.access_token);
           window.location.assign("/recipes");
-          localStorage.setItem("user_id", 1);
-          localStorage.setItem("user", username);
-          localStorage.setItem("onboarding_complete", true);
+        } else {
+          setErrorMessage("Failed to log in");
         }
       })
-      .finally((data) => {
-        console.log(data);
+      .catch((error) => {
+        console.error("Error logging in User:\n", error);
+        setErrorMessage("Login failed");
       });
   }
 
