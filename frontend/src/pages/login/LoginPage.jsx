@@ -37,19 +37,18 @@ export default function LoginPage() {
         password,
       }),
     })
-      .then((res) => {
-        if (!res.ok) {
-          console.error("Error logging in User:\n");
-          return null;
-        } else {
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.access_token) {
+          localStorage.setItem("access_token", data.access_token);
           window.location.assign("/recipes");
-          localStorage.setItem("user_id", 1);
-          localStorage.setItem("user", username);
-          localStorage.setItem("onboarding_complete", true);
+        } else {
+          setErrorMessage("Failed to log in");
         }
       })
-      .finally((data) => {
-        console.log(data);
+      .catch((error) => {
+        console.error("Error logging in User:\n", error);
+        setErrorMessage("Login failed");
       });
   }
 

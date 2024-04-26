@@ -2,8 +2,24 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, EmailStr
 from app.rabbitmq.rabbitmq_client import RabbitMQ
 from typing import List
+import os
+from datetime import datetime, timedelta
+import jwt
 
 router = APIRouter()
+
+ALGORITHM = "HS256"
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+def create_access_token(data: dict, expires_delta: timedelta = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)  # Token expires in 15 minutes
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
 
 class RegisterRequest(BaseModel):
     username: str
@@ -13,6 +29,7 @@ class RegisterRequest(BaseModel):
 @router.post("/api/auth/register")
 async def register(request: RegisterRequest):
     print("Registering...")
+    print(request)
     rabbitmq_client = RabbitMQ(queue_name='register_queue')
     
     message = {
@@ -21,7 +38,7 @@ async def register(request: RegisterRequest):
         'password': request.password
     }
     response = rabbitmq_client.call(message)
-    
+    print(response)
     rabbitmq_client.close_connection()
     
     if response.get("success"):
@@ -65,11 +82,11 @@ async def login(request: LoginRequest):
     rabbitmq_client = RabbitMQ(queue_name='login_queue')
     response = rabbitmq_client.call({'username': request.username, 'password': request.password})
     rabbitmq_client.close_connection()
-    print(response)
     if response["success"]:
-        return {"message": "Login successful"}
+        access_token = create_access_token(data={"sub": request.username})
+        return {"access_token": access_token, "token_type": "bearer"}
     else:
-        raise HTTPException(status_code=400, detail="Login failed")
+        raise HTTPException(status_code=401, detail="Incorrect username or password")
 
 @router.get("/api/auth/user-settings/{username}")
 async def get_user_settings(username):
