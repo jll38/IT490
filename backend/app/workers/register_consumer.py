@@ -4,6 +4,7 @@ import mysql.connector
 from mysql.connector import Error
 import os
 from dotenv import load_dotenv
+import bcrypt
 
 def user_exists(db_config, username, email):
     try:
@@ -20,12 +21,14 @@ def user_exists(db_config, username, email):
 
 def register_user(db_config, username, email, password):
     """Insert a new user into the database."""
+
+    password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     if user_exists(db_config, username, email):
         return False  # User already exists
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO Users (username, email, password_hash, onboarding_complete) VALUES (%s, %s, %s, %s)", (username, email, password, 0))
+        cursor.execute("INSERT INTO Users (username, email, password_hash, onboarding_complete) VALUES (%s, %s, %s, %s)", (username, email, password_hash, 0))
         conn.commit()
         cursor.close()
         conn.close()

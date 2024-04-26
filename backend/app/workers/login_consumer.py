@@ -4,6 +4,7 @@ import mysql.connector
 from mysql.connector import Error
 import os
 from dotenv import load_dotenv
+import bcrypt
 
 def validate_user_credentials(db_config, username, password):
     """Validate login credentials against the database."""
@@ -15,8 +16,8 @@ def validate_user_credentials(db_config, username, password):
         print(user_record)
         cursor.close()
         conn.close()
-        if user_record and user_record['password_hash'] == password: 
-            return True
+        print("Checking hash...")
+        return bcrypt.checkpw(password.encode('utf-8'), user_record['password_hash'].encode('utf-8'))
     except Error as e:
         print(f"Database error: {e}")
     return False
