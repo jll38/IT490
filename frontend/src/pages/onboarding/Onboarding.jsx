@@ -6,6 +6,7 @@ export default function Onboarding() {
   const [dietaryRestrictions, setDietRestrictions] = React.useState([]);
   const [tdee, setTDEE] = React.useState(null);
 
+
   const handleChange = (event) => {
     const { value, checked } = event.target;
     setDietRestrictions((prev) => {
@@ -17,8 +18,9 @@ export default function Onboarding() {
     });
   };
 
+  
   React.useEffect(() => {console.log(dietaryRestrictions)}, [dietaryRestrictions]);
-
+  if(!User) return window.location.assign('/')
   const handleSubmit = (e) => {
     e.preventDefault()
     const body = JSON.stringify({
@@ -71,8 +73,8 @@ export default function Onboarding() {
         </legend>
         <div class="mt-2 space-y-2">
           {[
-            { label: "No Carb", value: "noCarb" },
-            { label: "Gluten Free", value: "glutenFree" },
+            { label: "No Carb", value: "ketogenic" },
+            { label: "Gluten Free", value: "gluten free" },
             { label: "Kosher", value: "kosher" },
             { label: "Halal", value: "halal" },
           ].map((option) => (

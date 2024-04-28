@@ -44,9 +44,7 @@ function App() {
     {
       path: "register/onboarding",
       element: (
-        <RouteGuard>
           <Onboarding />
-        </RouteGuard>
       ),
     },
     {

@@ -61,8 +61,7 @@ export default function SettingsPage() {
     })
       .then((res) => {
         if (res.ok) {
-          alert("Your preferences have been updated and saved.")
-
+          alert("Your preferences have been updated and saved.");
         } else {
           res
             .json()
@@ -93,8 +92,8 @@ export default function SettingsPage() {
             </legend>
             <div class="mt-2 space-y-2">
               {[
-                { label: "No Carb", value: "noCarb" },
-                { label: "Gluten Free", value: "glutenFree" },
+                { label: "No Carb", value: "ketogenic" },
+                { label: "Gluten Free", value: "gluten free" },
                 { label: "Kosher", value: "kosher" },
                 { label: "Halal", value: "halal" },
               ].map((option) => (

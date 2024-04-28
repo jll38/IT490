@@ -55,7 +55,7 @@ def get_user_info(db_config, username):
                 'username': username,
                 'user_id': user_record['user_id'],
                 'email': user_record['email'],
-                'dietary_restrictions': str(user_record['dietary_restrictions']).strip('[]').split(', ')
+                'dietary_restrictions': str(user_record['dietary_restrictions']).strip('[]').replace("'", "").split(', ')
             }
         else:
             # User not found, return an empty dictionary or raise an exception
