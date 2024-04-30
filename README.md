@@ -34,10 +34,10 @@ Basic setup for each server:
 - sudo npm install - installs react
 - npm start - this will start the react project
 
-- For **Database**:
+- **Database**:
 - again mysql-server
 - There are a few tables that are needed across all enviorments.
-# tables
+# Tables
 Table 1 forum_comments:
 - comment_id int NOT NULL AUTO_INCREMENT,
 - post_id int DEFAULT NULL,
@@ -96,8 +96,12 @@ Table 6 Users
 - PRIMARY KEY (user_id),
 - UNIQUE KEY username (username),
 - UNIQUE KEY email (email)
-    
-That should be it for the Dev machine.
+
+# **QA**
+Very similar to dev. The only change would be you can replicate the database with some commands which can be found (here is a placeholder).
+
+# **Prod**
+Needs all the same stuff as QA and Dev but does not get updated as frequently. In fact you don't update this unless it is ready to be public facing.
 
 
 
