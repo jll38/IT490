@@ -1,5 +1,4 @@
-The Big Steppers
-
+# The Big Steppers
 
 
 
@@ -14,52 +13,52 @@ OS- Ubuntu 22.04 - match your cpu type. For example Macbooks use arm so make sur
 Hardware - 4 cores 4 GB of RAM and 90 gb of storage. This is all dependant on your resources avaiable for each machine. You can lower the storage if needed and the amount of cores as well.
 
 Basic setup for each server:
-  su root
-  sudo adduser <username> sudo - this is because some times the new user in the virtual machine would not be added to the sudo group.
-  sudo apt install git - fork repos and checking out branches
-  sudo apt install gitk
-  sudo apt install php-amqp - for rabbitmq
-  sudo apt install mysql-server - database we chose to use
-  sudo apt install rabbitmq-server - messaging system for this course
-  sudo rabbitmq-plugins enable rabbitmq_management - the gui for rabbitmq
-  sudo apt install curl - alternative wget
-  curl -s https://install.zerotier.com | sudo bash - vpn used for all machines
-  sudo ufw allow 5672, 22 ( this is unsecure but how we setup the servers initially), 3306, 15672, backend ip, front end ip, database ip, dmz ip - allow traffic on this port (not great practice), each ip is what it is in zerotier.
-  Once zerotier is installed use sudo zerotier-cli status to check your id. 
-  sudo zerotier-cli join networkID - The id is given to you by the network admin or they can add you via your zerotier id.
+- su root
+- sudo adduser <username> sudo - this is because some times the new user in the virtual machine would not be added to the sudo group.
+- sudo apt install git - fork repos and checking out branches
+- sudo apt install gitk
+- sudo apt install php-amqp - for rabbitmq
+- sudo apt install mysql-server - database we chose to use
+- sudo apt install rabbitmq-server - messaging system for this course
+- sudo rabbitmq-plugins enable rabbitmq_management - the gui for rabbitmq
+- sudo apt install curl - alternative wget
+- curl -s https://install.zerotier.com | sudo bash - vpn used for all machines
+- sudo ufw allow 5672, 22 ( this is unsecure but how we setup the servers initially), 3306, 15672, backend ip, front end ip, database ip, dmz ip
+- Once zerotier is installed use `sudo zerotier-cli status` to check your id.
+- `sudo zerotier-cli join networkID` The id is given to you by the network admin or they can add you via your zerotier id.
 
-For each specific enviroment:
-  **Dev**:
-    All the prior mentioned setup EXCEPT the ufw rules. You need 5672 and 15672. Those are for rabbitmq. 
-    sudo ufw allow from server ip address (for other servers) to any port 22 and on port 3306.
-    For running the backend:
-      pip3 install -r requirements.txt (uvicorn, pika, fastapi, mysql-connector-python, email-validator)
-      python3 main.py - in the backend directory
-      python3 consumer.py - ./backend/app/workers
-    
-  For **frontend**:
-    Sudo apt install node - installs node.js
-    sudo npm install - installs react
-    npm start - this will start the react project
+# For each specific enviroment:
+**Dev**:
+- All the prior mentioned setup EXCEPT the ufw rules. You need 5672 and 15672. Those are for rabbitmq.
+- sudo ufw allow from server ip address (for other servers) to any port 22 and on port 3306.
+- **for running the backend**:
+- pip3 install -r requirements.txt (uvicorn, pika, fastapi, mysql-connector-python, email-validator)
+- python3 main.py - in the backend directory
+- python3 consumer.py - ./backend/app/workers
+- For **frontend**:
+- Sudo apt install node - installs node.js
+- sudo npm install - installs react
+- npm start - this will start the react project
 
-  For **Database**:
-    again mysql-server
-    There are a few tables that are needed across all enviorments. 
-    Table 1 forum_comments:
-           - comment_id int NOT NULL AUTO_INCREMENT,
-            - post_id int DEFAULT NULL,
-            - user_id int DEFAULT NULL,
-            - content text NOT NULL,
-            - created_at datetime NOT NULL,
-            - PRIMARY KEY (comment_id)
+- For **Database**:
+- again mysql-server
+- There are a few tables that are needed across all enviorments.
+# tables
+Table 1 forum_comments:
+- comment_id int NOT NULL AUTO_INCREMENT,
+- post_id int DEFAULT NULL,
+- user_id int DEFAULT NULL,
+- content text NOT NULL,
+- created_at datetime NOT NULL,
+- PRIMARY KEY (comment_id)
 
-  Table 2 Forum_Posts
-            - post_id int NOT NULL AUTO_INCREMENT,
-            - user_id int DEFAULT NULL,
-            - title varchar(255) NOT NULL,
-            - content text NOT NULL,
-            - created_at datetime NOT NULL,
-            - PRIMARY KEY (post_id)
+Table 2 Forum_Posts
+- post_id int NOT NULL AUTO_INCREMENT,
+- user_id int DEFAULT NULL,
+- title varchar(255) NOT NULL,
+- content text NOT NULL,
+- created_at datetime NOT NULL,
+- PRIMARY KEY (post_id)
 
   Table 3 Ingredients
             - ingredient_id int NOT NULL AUTO_INCREMENT,
