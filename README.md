@@ -51,6 +51,7 @@ Table 1 forum_comments:
 - content text NOT NULL,
 - created_at datetime NOT NULL,
 - PRIMARY KEY (comment_id)
+
 Table 2 Forum_Posts
 - post_id int NOT NULL AUTO_INCREMENT,
 - user_id int DEFAULT NULL,
@@ -58,6 +59,7 @@ Table 2 Forum_Posts
 - content text NOT NULL,
 - created_at datetime NOT NULL,
 - PRIMARY KEY (post_id)
+
 Table 3 Ingredients
 - ingredient_id int NOT NULL AUTO_INCREMENT,
 - name varchar(255) NOT NULL,
