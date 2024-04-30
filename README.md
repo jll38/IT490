@@ -8,9 +8,8 @@
 
 
 
-Things needed for all VMs to function:
-OS- Ubuntu 22.04 - match your cpu type. For example Macbooks use arm so make sure to install the arm64 version.
-Hardware - 4 cores 4 GB of RAM and 90 gb of storage. This is all dependant on your resources avaiable for each machine. You can lower the storage if needed and the amount of cores as well.
+# Things needed for all VMs to function:
+> OS- Ubuntu 22.04 - match your cpu type. For example Macbooks use arm so make sure to install the arm64 version.Hardware - 4 cores 4 GB of RAM and 90 gb of storage. This is all dependant on your resources avaiable for each machine. You can lower the storage if needed and the amount of cores as well.
 
 Basic setup for each server:
 - su root
