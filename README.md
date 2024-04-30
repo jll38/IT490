@@ -64,6 +64,7 @@ Table 3 Ingredients
 - type varchar(50) DEFAULT NULL,
 - recipe_id int DEFAULT NULL,
 - PRIMARY KEY (ingredient_id)
+
 Table 4 Ratings
 - rating_id int NOT NULL AUTO_INCREMENT,
 - recipe_id int DEFAULT NULL,
