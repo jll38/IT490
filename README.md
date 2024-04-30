@@ -28,6 +28,7 @@ Basic setup for each server:
 - All the prior mentioned setup EXCEPT the ufw rules. You need 5672 and 15672. Those are for rabbitmq.
 - sudo ufw allow from server ip address (for other servers) to any port 22 and on port 3306.
 - **for running the backend**:
+- sudo apt install python3-pip
 - pip3 install -r requirements.txt (uvicorn, pika, fastapi, mysql-connector-python, email-validator)
 - python3 main.py - in the backend directory
 - python3 consumer.py - ./backend/app/workers
