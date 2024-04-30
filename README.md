@@ -9,7 +9,7 @@
 - 4 cores 4 GB of RAM and 90 gb of storage. This is all dependant on your resources avaiable for each machine. You can lower the storage if needed and the amount of cores as well.
 #Commands for VM
 Basic setup for each server:
-- su root - We are doing this because the VM sometimes doesn't add the new account to sudoers group and only root can add them.
+- su root - We are doing this because only root can change the group for the below command
 - sudo adduser {username of the VM} sudo - this is because some times the new user in the virtual machine would not be added to the sudo group.
 - sudo apt install git - fork repos and checking out branches
 - sudo apt install gitk
