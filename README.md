@@ -10,7 +10,7 @@
 #Commands for VM
 Basic setup for each server:
 - su root - We are doing this because the VM sometimes doesn't add the new account to sudoers group and only root can add them.
-- sudo adduser {username of the VM sudo} - this is because some times the new user in the virtual machine would not be added to the sudo group.
+- sudo adduser {username of the VM} sudo - this is because some times the new user in the virtual machine would not be added to the sudo group.
 - sudo apt install git - fork repos and checking out branches
 - sudo apt install gitk
 - sudo apt install php-amqp - for rabbitmq
