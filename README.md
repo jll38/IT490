@@ -7,10 +7,10 @@
 - OS- Ubuntu 22.04  match your cpu type. For example Macbooks use arm so make sure to install the arm64 version.
 - Hardware
 - 4 cores 4 GB of RAM and 90 gb of storage. This is all dependant on your resources avaiable for each machine. You can lower the storage if needed and the amount of cores as well.
-
+#Commands for VM
 Basic setup for each server:
-- su root
-- sudo adduser <username> sudo - this is because some times the new user in the virtual machine would not be added to the sudo group.
+- su root - We are doing this because the VM sometimes doesn't add the new account to sudoers group and only root can add them.
+- sudo adduser {username of the VM sudo} - this is because some times the new user in the virtual machine would not be added to the sudo group.
 - sudo apt install git - fork repos and checking out branches
 - sudo apt install gitk
 - sudo apt install php-amqp - for rabbitmq
