@@ -18,8 +18,16 @@ import SearchBox from "../../components/recipe/RecipeSearchInput";
 
 export default function RecipesSearch() {
   const [trending, setTrending] = useState([]);
+  const [recommended, setRecommended] = useState([]);
   const [currLoadedTrending, setCurrLoadedTrending] = useState(0);
-  
+  useEffect(() => {
+    fetch(`${BACKEND}/api/recipes/recommended/${User.username}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setRecommended(data);
+      });
+  }, []);   
   useEffect(() => {
     fetch(`${BACKEND}/api/recipes/trending`)
       .then((res) => res.json())
@@ -43,7 +51,7 @@ export default function RecipesSearch() {
         <Heading order={3} style={{ textAlign: "left", width: "100%", fontSize: "75%" }} className="text-slate-700">
           Based on your dietary preferences
         </Heading>
-        {trending && (
+        {recommended && (
           <Grid
             width="100%"
             columns={{ initial: "1", sm: "2", md: "3", lg: "4" }}
@@ -52,7 +60,7 @@ export default function RecipesSearch() {
             justify={"center"}
             style={{ margin: "10px 0" }}
           >
-            {trending.map((recipe, i) => (
+            {recommended.map((recipe, i) => (
               <RecipeSearchBox recipe={recipe} key={"recipe-" + i} />
             ))}
           </Grid>
