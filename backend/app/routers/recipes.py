@@ -19,6 +19,20 @@ async def get_trending_recipes():
             status_code=500, detail="Failed to get trending recipes")
 
 
+@router.get("/api/recipes/recommended/{username}")
+async def get_trending_recipes(username: str = Path(..., description="The name of the user to retrieve recommended recipes for")):
+    rabbitmq_client = RabbitMQ(queue_name='recipes_recommended_queue')
+    response = rabbitmq_client.call({"username": username})
+    print(1)
+    rabbitmq_client.close_connection()
+    print(2)
+    if response.get("success"):
+        return response.get("recipes", [])
+    else:
+        raise HTTPException(
+            status_code=500, detail="Failed to get trending recipes")
+
+
 @router.get("/api/recipes/recent")
 async def get_recent_recipes():
     rabbitmq_client = RabbitMQ(queue_name='recipes_recent_queue')
@@ -65,7 +79,7 @@ async def setRating(request: CreateRatingRequest):
 @router.get("/api/recipes/")
 async def searchRecipes(query: str = "", number: int = 10, offset: int = 0):
     rabbitmq_client = RabbitMQ(queue_name='recipe_search_queue')
-    message = {'query': query, 'number' : number, 'offset': offset}
+    message = {'query': query, 'number': number, 'offset': offset}
     response = rabbitmq_client.call(message)
     rabbitmq_client.close_connection()
     if response.get("success"):

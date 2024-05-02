@@ -2,11 +2,11 @@ import React from "react";
 import { Card, Inset, Text, Strong } from "@radix-ui/themes";
 import StarRating from "../shared/StarRating/StarRating";
 import Badge from "../badge/Badge.jsx";
-import './truncate.css'
+import "./truncate.css";
 export default function RecipeSearchBox({ recipe }) {
   function truncateText(text, maxLength) {
     if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + '...';
+    return text.substring(0, maxLength) + "...";
   }
   return (
     <Card asChild size="2" style={{ width: 300, maxHeight: 340 }}>
@@ -41,9 +41,13 @@ export default function RecipeSearchBox({ recipe }) {
           </>
         )}
 
-        <Text className="truncate-overflow" size="2" dangerouslySetInnerHTML={{ __html: truncateText(recipe.summary,100) }}>
-
-        </Text>
+        <Text
+          className="truncate-overflow"
+          size="2"
+          dangerouslySetInnerHTML={{
+            __html: truncateText(recipe.summary, 100),
+          }}
+        ></Text>
       </a>
     </Card>
   );
