@@ -10,7 +10,7 @@ import {
   Button,
 } from "@radix-ui/themes";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-
+import { User } from "../../lib/token";
 import { BACKEND } from "../../lib/constants";
 
 import "./RecipesSearch.css";
@@ -19,7 +19,7 @@ import SearchBox from "../../components/recipe/RecipeSearchInput";
 export default function RecipesSearch() {
   const [trending, setTrending] = useState([]);
   const [currLoadedTrending, setCurrLoadedTrending] = useState(0);
-
+  
   useEffect(() => {
     fetch(`${BACKEND}/api/recipes/trending`)
       .then((res) => res.json())
@@ -38,6 +38,31 @@ export default function RecipesSearch() {
       <SearchBox />
       <div className="z-10">
         <Heading order={2} style={{ textAlign: "left", width: "100%" }}>
+          Recommended For You
+        </Heading>
+        <Heading order={3} style={{ textAlign: "left", width: "100%", fontSize: "75%" }} className="text-slate-700">
+          Based on your dietary preferences
+        </Heading>
+        {trending && (
+          <Grid
+            width="100%"
+            columns={{ initial: "1", sm: "2", md: "3", lg: "4" }}
+            gap="3"
+            align={"center"}
+            justify={"center"}
+            style={{ margin: "10px 0" }}
+          >
+            {trending.map((recipe, i) => (
+              <RecipeSearchBox recipe={recipe} key={"recipe-" + i} />
+            ))}
+          </Grid>
+        )}
+        <Button onClick={() => {}} style={{ width: "100px" }}>
+          Load More
+        </Button>
+      </div>
+      <div className="z-10">
+        <Heading order={2} style={{ textAlign: "left", width: "100%" }}>
           Trending
         </Heading>
         {trending && (
@@ -50,10 +75,7 @@ export default function RecipesSearch() {
             style={{ margin: "10px 0" }}
           >
             {trending.map((recipe, i) => (
-              <RecipeSearchBox
-                recipe={recipe}
-                key={"recipe-" + i}
-              />
+              <RecipeSearchBox recipe={recipe} key={"recipe-" + i} />
             ))}
           </Grid>
         )}

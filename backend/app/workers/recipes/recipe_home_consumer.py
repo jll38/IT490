@@ -34,6 +34,16 @@ def fetch_recent_recipes():
     response.raise_for_status()
     return response.json().get("results", [])
 
+def fetch_user_preferences(user : str):
+    pass
+
+def fetch_recommended_recipes(user : str):
+    # fetch_user_preferences
+
+    # api url
+    # params (utilize user preferences / restrictions)
+    
+    pass
 
 def fetch_average_rating_from_db(recipe_id, db_config):
     """Fetch the average rating from the database for a given recipe ID."""
@@ -91,6 +101,22 @@ def on_fetch_recent_request(ch, method, props, body, db_config):
                      body=response)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
+def on_fetch_recommended_request(ch, method, props, body, db_config):
+    print("Received request for recent recipes")
+    recipes = fetch_recent_recipes() # Change to fetch_recommended_recipes()
+    for recipe in recipes:
+        recipe_id = recipe.get("id")
+        average_rating = fetch_average_rating_from_db(recipe_id, db_config)
+        recipe["average_rating"] = average_rating if average_rating else None
+    response = json.dumps({"success": True, "recipes": recipes})
+
+    ch.basic_publish(exchange="",
+                     routing_key=props.reply_to,
+                     properties=pika.BasicProperties(
+                         correlation_id=props.correlation_id),
+                     body=response)
+    ch.basic_ack(delivery_tag=method.delivery_tag)
+
 
 def main():
     load_dotenv()
@@ -106,11 +132,14 @@ def main():
     channel = connection.channel()
     channel.queue_declare(queue="recipes_trending_queue")
     channel.queue_declare(queue="recipes_recent_queue")
+    channel.queue_declare(queue="recipes_recommended_queue")
     channel.basic_qos(prefetch_count=1)
     channel.basic_consume(queue="recipes_trending_queue",
                           on_message_callback=lambda ch, method, props, body: on_fetch_trending_request(ch, method, props, body, db_config))
     channel.basic_consume(queue="recipes_recent_queue",
                           on_message_callback=lambda ch, method, props, body: on_fetch_recent_request(ch, method, props, body, db_config))
+    channel.basic_consume(queue="recipes_recommended_queue",
+                          on_message_callback=lambda ch, method, props, body: on_fetch_recommended_request(ch, method, props, body, db_config))
     print(" [x] Awaiting requests for recipes")
     channel.start_consuming()
 
