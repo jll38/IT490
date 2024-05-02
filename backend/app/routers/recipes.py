@@ -19,10 +19,10 @@ async def get_trending_recipes():
             status_code=500, detail="Failed to get trending recipes")
 
 
-@router.get("/api/recipes/recommended/{user}")
-async def get_trending_recipes(user: str = Path(..., description="The name of the user to retrieve recommended recipes for")):
+@router.get("/api/recipes/recommended/{username}")
+async def get_trending_recipes(username: str = Path(..., description="The name of the user to retrieve recommended recipes for")):
     rabbitmq_client = RabbitMQ(queue_name='recipes_recommended_queue')
-    response = rabbitmq_client.call({"user": user})
+    response = rabbitmq_client.call({"username": username})
     print(1)
     rabbitmq_client.close_connection()
     print(2)

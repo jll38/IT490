@@ -34,16 +34,59 @@ def fetch_recent_recipes():
     response.raise_for_status()
     return response.json().get("results", [])
 
-def fetch_user_preferences(user : str):
-    pass
+def fetch_user_preferences(user: str, db_config):
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor(dictionary=True)
+        query = """
+            SELECT dietary_restrictions, TDEE
+            FROM Users
+            WHERE username = %s
+        """
+        cursor.execute(query, (user,))
+        user_prefs = cursor.fetchone()
+        cursor.close()
+        conn.close()
 
-def fetch_recommended_recipes(user : str):
-    # fetch_user_preferences
+        if user_prefs and user_prefs.get("dietary_restrictions"):
+            user_prefs["dietary_restrictions"] = eval(user_prefs["dietary_restrictions"])
+        
+        return user_prefs
+    except Error as e:
+        print(f"Database error: {e}")
+        return None
 
-    # api url
-    # params (utilize user preferences / restrictions)
+def fetch_recommended_recipes(user: str, db_config):
+    user_prefs = fetch_user_preferences(user, db_config)
+    if not user_prefs:
+        return []
+
+    dietary_restrictions = user_prefs.get("dietary_restrictions", [])
     
-    pass
+    url = "https://api.spoonacular.com/recipes/complexSearch"
+    params = {
+        "apiKey": os.getenv("SPOONACULAR_API_KEY"),
+        "sort": "popularity",
+        "addRecipeInformation": True,
+        "number": 10,
+        "includeNutrition": True,
+    }
+
+    if dietary_restrictions:
+        params["diet"] = dietary_restrictions
+
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    recipes = response.json().get("results", [])
+
+    # Adding average rating to each recipe
+    for recipe in recipes:
+        recipe_id = recipe.get("id")
+        average_rating = fetch_average_rating_from_db(recipe_id, db_config)
+        recipe["average_rating"] = average_rating if average_rating else None
+
+    return recipes
+
 
 def fetch_average_rating_from_db(recipe_id, db_config):
     """Fetch the average rating from the database for a given recipe ID."""
@@ -103,7 +146,9 @@ def on_fetch_recent_request(ch, method, props, body, db_config):
 
 def on_fetch_recommended_request(ch, method, props, body, db_config):
     print("Received request for recent recipes")
-    recipes = fetch_recent_recipes() # Change to fetch_recommended_recipes()
+    request = json.loads(body)
+    username = request['username']
+    recipes = fetch_recommended_recipes(username, db_config=db_config) # Change to fetch_recommended_recipes()
     for recipe in recipes:
         recipe_id = recipe.get("id")
         average_rating = fetch_average_rating_from_db(recipe_id, db_config)
