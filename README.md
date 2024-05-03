@@ -1,7 +1,7 @@
 # The Big Steppers
 1. [Julian Lechner](https://github.com/jll38/IT490/tree/final) 
 2. [Joshua Josias](https://github.com/jjosias14/it490)
-3. [Avneet Kaur](https://github.com/ak256-ak/AvneetK)
+3. [Avneet Kaur](https://github.com/ak256-ak/AvneetK/tree/Frontend-Final/FinalFE)
 4. [Richard Tyrrell](https://github.com/Quizno97)
 # Things needed for all VMs to function:
 - OS- Ubuntu 22.04  match your cpu type. For example Macbooks use arm so make sure to install the arm64 version.
