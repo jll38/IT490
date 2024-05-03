@@ -3,6 +3,8 @@ import { PersonIcon } from "@radix-ui/react-icons";
 import TDEECalculator from "../../components/TDEE/TDEECalculator";
 import { BACKEND } from "../../lib/constants";
 import { User } from "../../lib/token";
+import * as Checkbox from "@radix-ui/react-checkbox";
+
 export default function SettingsPage() {
   const [dietaryRestrictions, setDietRestrictions] = React.useState([]);
   const [tdee, setTDEE] = React.useState(null);
@@ -19,7 +21,7 @@ export default function SettingsPage() {
   };
 
   React.useEffect(() => {
-    fetch(`${BACKEND}/api/auth/user-settings/${User.user_id}`).then((res) => {
+    fetch(`${BACKEND}/api/auth/user-settings/${User.username}`).then((res) => {
       if (res.ok) {
         console.log("Successfully fetched user settings...");
         res.json().then((data) => {
@@ -97,18 +99,16 @@ export default function SettingsPage() {
                 { label: "Kosher", value: "kosher" },
                 { label: "Halal", value: "halal" },
               ].map((option) => (
-                <div key={option.value}>
-                  <label class="inline-flex items-center">
-                    <input
-                      type="checkbox"
-                      name="dietaryRestrictions"
-                      value={option.value}
-                      onChange={handleChange}
-                      checked={dietaryRestrictions.includes(option.value)}
-                      class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    />
-                    <span class="ml-2">{option.label}</span>
-                  </label>
+                <div key={option.value} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    name="dietaryRestrictions"
+                    value={option.value}
+                    onChange={handleChange}
+                    checked={dietaryRestrictions.includes(option.value)}
+                    className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  />
+                  <label className="ml-2">{option.label}</label>
                 </div>
               ))}
             </div>

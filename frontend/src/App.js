@@ -19,6 +19,7 @@ import Onboarding from "./pages/onboarding/Onboarding";
 import RecipesSearch from "./pages/recipes/RecipesSearch";
 import Recipe from "./pages/recipes/Recipe";
 import SettingsPage from "./pages/user/SettingsPage";
+import Profile from "./pages/user/Profile";
 
 //Forum
 import ForumPage from "./pages/forum/Forum";
@@ -43,9 +44,7 @@ function App() {
     },
     {
       path: "register/onboarding",
-      element: (
-          <Onboarding />
-      ),
+      element: <Onboarding />,
     },
     {
       path: "recipes",
@@ -84,6 +83,22 @@ function App() {
       element: (
         <RouteGuard>
           <PostDetailPage />
+        </RouteGuard>
+      ),
+    },
+    {
+      path: "profile",
+      element: (
+        <RouteGuard>
+          <Profile></Profile>
+        </RouteGuard>
+      ),
+    },
+    {
+      path: "profile/:username",
+      element: (
+        <RouteGuard>
+          <Profile></Profile>
         </RouteGuard>
       ),
     },

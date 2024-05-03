@@ -24,8 +24,8 @@ export const Dropdown = ({user}) => {
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content className="DropdownMenuContent" sideOffset={5}>
-          <DropdownMenu.Item className="DropdownMenuItem">
-            Profile
+          <DropdownMenu.Item className="DropdownMenuItem" asChild>
+            <a href={'/profile'}>Profile</a>
           </DropdownMenu.Item>
 
           <DropdownMenu.Separator className="DropdownMenuSeparator" />
