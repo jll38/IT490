@@ -9,7 +9,9 @@ import "./profile.css";
 export default function Profile() {
   const [dietaryRestrictions, setDietRestrictions] = React.useState([]);
   const [tdee, setTDEE] = React.useState(null);
+  const [error, setError] = React.useState(false);
   let { username } = useParams();
+  const profileUser = username;
   const handleChange = (event) => {
     const { value, checked } = event.target;
     setDietRestrictions((prev) => {
@@ -22,7 +24,7 @@ export default function Profile() {
   };
 
   React.useEffect(() => {
-    fetch(`${BACKEND}/api/auth/user-settings/${User.username}`).then((res) => {
+    fetch(`${BACKEND}/api/auth/user-settings/${profileUser}`).then((res) => {
       if (res.ok) {
         console.log("Successfully fetched user settings...");
         res.json().then((data) => {
@@ -36,6 +38,7 @@ export default function Profile() {
           .json()
           .then((data) => {
             console.log(data);
+            setError(true)
             console.error(
               "Error:",
               data.detail || "Failed to retrieve user settings"
@@ -43,23 +46,26 @@ export default function Profile() {
           })
           .catch((error) => {
             console.error("Failed to parse response:", error);
+            
           });
       }
     });
   }, []);
 
-  return (
+  return error ? (
+    <div>User does not exist</div>
+  ) : (
     <div className="pageContainer">
       <section className="p-8 text-black/[0.87] flex-col flex gap-4 items-center w-full min-[0px]:pb-16  min-[576px]:pb-16 min-[992px]:pb-20">
         <h1 className="text-sm text-gray">Profile</h1>
         <PersonIcon style={{ scale: "300%" }} />
-        <h2 className="text-3xl">{User.username}</h2>
+        <h2 className="text-3xl">{username}</h2>
         <p>
-          <em>User's</em> dietary preferences:
+          <em>{username}</em> dietary preferences:
           <ul>
             {dietaryRestrictions.map((item, i) => {
-                <li>{item}</li>
-            }) }
+              <li>{item}</li>;
+            })}
           </ul>
         </p>
         <Tabs.Root className="TabsRoot" defaultValue="tab1">
@@ -73,12 +79,12 @@ export default function Profile() {
           </Tabs.List>
           <Tabs.Content className="TabsContent" value="forum">
             <p className="Text">
-              View <em>User's</em> forum posts
+              View <em>{username}'s</em> forum posts
             </p>
           </Tabs.Content>
           <Tabs.Content className="TabsContent" value="liked">
             <p className="Text">
-              View <em>User's</em> liked recipes
+              View <em>{username}'s</em> liked recipes
             </p>
           </Tabs.Content>
         </Tabs.Root>
