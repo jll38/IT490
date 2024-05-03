@@ -162,7 +162,7 @@ export default function HomePage() {
     </div>
   ) : (
     <div className="pageContainer">
-      <section className="bg-pink-500 flex-col flex w-full min-[0px]:pb-16  min-[576px]:pb-16 min-[992px]:pb-20">
+      <section className="text-black/[0.87]flex-col flex w-full min-[0px]:pb-16  min-[576px]:pb-16 min-[992px]:pb-20">
         <div className="items-center flex w-full m-auto min-[0px]:flex-col  min-[0px]:justify-center min-[0px]:max-w-[23.75rem] min-[0px]:pt-24 min-[576px]:max-w-[26.25rem] min-[992px]:flex-row min-[992px]:justify-between min-[992px]:max-w-[61.50rem] min-[992px]:pt-12 min-[992px]:pr-9">
           <div className="text-black/75 flex min-[0px]:flex-col  min-[0px]:justify-center min-[0px]:items-center min-[992px]:justify-between min-[992px]:items-start min-[992px]:w-[33.75rem]">
             <h1 className="flex min-[0px]:flex-col  min-[0px]:justify-center min-[0px]:items-center min-[992px]:justify-between min-[992px]:items-start min-[992px]:w-[43.75rem]">
