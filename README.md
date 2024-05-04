@@ -36,7 +36,8 @@ Basic setup for each server:
 - Sudo apt install node - installs node.js
 - sudo npm install - installs react
 - npm start - this will start the react project
-
+- There is a .env file in the backend that is our api key. We used [spoonacular](https://spoonacular.com/food-api).You can make an account and use your own api key to make this app function. Just add it to the env file.
+- The env file may also contain you database credentials, rabbitmq info as well. Use your own credentials. Make a new user in your database and for rabbitmq.
 - **Database**:
 - again mysql-server
 - There are a few tables that are needed across all enviorments.
@@ -101,10 +102,10 @@ Table 6 Users
 - UNIQUE KEY email (email)
 
 # **QA**
-Very similar to dev. The only change would be you can replicate the database with some commands which can be found (here is a placeholder).
+Use the deployment script to move the files from dev to QA, this will move everything over. You will also use mysql database replication for the databases while you test in QA. **LOCK THE TABLES IN DEV BEFORE REPLICATING**.
 
 # **Prod**
-Needs all the same stuff as QA and Dev but does not get updated as frequently. In fact you don't update this unless it is ready to be public facing.
+Needs all the same stuff as QA and Dev but does not get updated as frequently. In fact you don't update this unless it is ready to be public facing. Update this with the deployment script and use database replication to update the database as well. **LOCK THE TABLES IN QA BEFORE REPLICATING**.
 
 
 
