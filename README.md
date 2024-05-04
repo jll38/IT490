@@ -1,12 +1,12 @@
 # The Big Steppers
 1. [Julian Lechner](https://github.com/jll38/IT490/tree/final) 
 2. [Joshua Josias](https://github.com/jjosias14/it490)
-3. [Avneet Kaur](https://github.com/ak256-ak/AvneetK/tree/Frontend-Final/FinalFE)
+3. [Avneet Kaur](https://github.com/ak256-ak/AvneetK/tree/Frontend-Final)
 4. [Richard Tyrrell](https://github.com/Quizno97)
 # Things needed for all VMs to function:
-- OS- Ubuntu 22.04  match your cpu type. For example Macbooks use arm so make sure to install the arm64 version.
+- OS- Ubuntu 22.04  match your cpu type. For example, Macbooks use arm so make sure to install the arm64 version.
 - Hardware
-    - 4 cores 4 GB of RAM and 90 gb of storage. This is all dependant on your resources avaiable for each machine.
+    - 4 cores 4 GB of RAM and 90 gb of storage. This is all dependent on your resources available for each machine.
 #Commands for VM
 Basic setup for each server:
 - su root - We are doing this because only root can change the group for the below command
