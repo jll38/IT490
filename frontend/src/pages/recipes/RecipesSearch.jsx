@@ -12,6 +12,7 @@ import {
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { User } from "../../lib/token";
 import { BACKEND } from "../../lib/constants";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import "./RecipesSearch.css";
 import SearchBox from "../../components/recipe/RecipeSearchInput";
@@ -19,6 +20,8 @@ import SearchBox from "../../components/recipe/RecipeSearchInput";
 export default function RecipesSearch() {
   const [trending, setTrending] = useState([]);
   const [recommended, setRecommended] = useState([]);
+  const [loadingRecommended, setRecommendedLoading] = useState(true);
+  const [loadingTrending, setTrendingLoading] = useState(false);
   const [currLoadedTrending, setCurrLoadedTrending] = useState(0);
   useEffect(() => {
     fetch(`${BACKEND}/api/recipes/recommended/${User.username}`)
@@ -26,14 +29,16 @@ export default function RecipesSearch() {
       .then((data) => {
         console.log(data);
         setRecommended(data);
+        setRecommendedLoading(false);
       });
-  }, []);   
+  }, []);
   useEffect(() => {
     fetch(`${BACKEND}/api/recipes/trending`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
         setTrending(data);
+        setTrendingLoading(false);
       });
   }, []);
 
@@ -48,48 +53,60 @@ export default function RecipesSearch() {
         <Heading order={2} style={{ textAlign: "left", width: "100%" }}>
           Recommended For You
         </Heading>
-        <Heading order={3} style={{ textAlign: "left", width: "100%", fontSize: "75%" }} className="text-slate-700">
+        <Heading
+          order={3}
+          style={{ textAlign: "left", width: "100%", fontSize: "75%" }}
+          className="text-slate-700"
+        >
           Based on your dietary preferences
         </Heading>
-        {recommended && (
-          <Grid
-            width="100%"
-            columns={{ initial: "1", sm: "2", md: "3", lg: "4" }}
-            gap="3"
-            align={"center"}
-            justify={"center"}
-            style={{ margin: "10px 0" }}
-          >
-            {recommended.map((recipe, i) => (
-              <RecipeSearchBox recipe={recipe} key={"recipe-" + i} />
-            ))}
-          </Grid>
+        {loadingRecommended ? (
+          <div>loading</div>
+        ) : (
+          <>
+            {recommended && (
+              <Grid
+                width="100%"
+                columns={{ initial: "1", sm: "2", md: "3", lg: "4" }}
+                gap="3"
+                align={"center"}
+                justify={"center"}
+                style={{ margin: "10px 0" }}
+              >
+                {recommended.map((recipe, i) => (
+                  <RecipeSearchBox recipe={recipe} key={"recipe-" + i} />
+                ))}
+              </Grid>
+            )}
+            <Button onClick={() => {}} style={{ width: "100px" }}>
+              Load More
+            </Button>
+          </>
         )}
-        <Button onClick={() => {}} style={{ width: "100px" }}>
-          Load More
-        </Button>
       </div>
       <div className="z-10">
         <Heading order={2} style={{ textAlign: "left", width: "100%" }}>
           Trending
         </Heading>
-        {trending && (
-          <Grid
-            width="100%"
-            columns={{ initial: "1", sm: "2", md: "3", lg: "4" }}
-            gap="3"
-            align={"center"}
-            justify={"center"}
-            style={{ margin: "10px 0" }}
-          >
-            {trending.map((recipe, i) => (
-              <RecipeSearchBox recipe={recipe} key={"recipe-" + i} />
-            ))}
-          </Grid>
-        )}
-        <Button onClick={() => {}} style={{ width: "100px" }}>
-          Load More
-        </Button>
+       {loadingTrending ? <div>Loading...</div> : <>
+          {trending && (
+            <Grid
+              width="100%"
+              columns={{ initial: "1", sm: "2", md: "3", lg: "4" }}
+              gap="3"
+              align={"center"}
+              justify={"center"}
+              style={{ margin: "10px 0" }}
+            >
+              {trending.map((recipe, i) => (
+                <RecipeSearchBox recipe={recipe} key={"recipe-" + i} />
+              ))}
+            </Grid>
+          )}
+          <Button onClick={() => {}} style={{ width: "100px" }}>
+            Load More
+          </Button>
+        </>}
       </div>
 
       <div>
