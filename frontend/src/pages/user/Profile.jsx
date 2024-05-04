@@ -6,12 +6,15 @@ import { User } from "../../lib/token";
 import { useParams } from "react-router-dom";
 import * as Tabs from "@radix-ui/react-tabs";
 import "./profile.css";
+import { ForumPost } from "../../components/form/ForumPost";
+
 export default function Profile() {
   const [dietaryRestrictions, setDietRestrictions] = React.useState([]);
   const [tdee, setTDEE] = React.useState(null);
   const [error, setError] = React.useState(false);
+  const [posts, setPosts] = React.useState([]);
   let { username } = useParams();
-  const profileUser = username;
+  const profileUser = username ? username : User.username;
   const handleChange = (event) => {
     const { value, checked } = event.target;
     setDietRestrictions((prev) => {
@@ -38,7 +41,7 @@ export default function Profile() {
           .json()
           .then((data) => {
             console.log(data);
-            setError(true)
+            setError(true);
             console.error(
               "Error:",
               data.detail || "Failed to retrieve user settings"
@@ -46,10 +49,19 @@ export default function Profile() {
           })
           .catch((error) => {
             console.error("Failed to parse response:", error);
-            
           });
       }
     });
+
+    fetch(
+      `${BACKEND}/api/forum/posts/user/${profileUser}?user_id=${parseInt(
+        User.user_id
+      )}`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setPosts(data);
+      });
   }, []);
 
   return error ? (
@@ -68,7 +80,7 @@ export default function Profile() {
             })}
           </ul>
         </p>
-        <Tabs.Root className="TabsRoot" defaultValue="tab1">
+        <Tabs.Root className="TabsRoot" defaultValue="forum">
           <Tabs.List className="TabsList" aria-label="Manage your account">
             <Tabs.Trigger className="TabsTrigger" value="forum">
               Forum Posts
@@ -81,6 +93,10 @@ export default function Profile() {
             <p className="Text">
               View <em>{username}'s</em> forum posts
             </p>
+            {posts.map((post, i) => {
+              console.log(post);
+              return <ForumPost post={post} />;
+            })}
           </Tabs.Content>
           <Tabs.Content className="TabsContent" value="liked">
             <p className="Text">

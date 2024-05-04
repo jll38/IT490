@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Path
+from fastapi import APIRouter, HTTPException, Path, Query
 from pydantic import BaseModel, EmailStr
 from app.rabbitmq.rabbitmq_client import RabbitMQ
 
@@ -41,6 +41,7 @@ async def add_forum_post(request: ForumPostCreateRequest):
 
 @router.get("/api/forum/posts")
 async def view_forum_posts(user_id: int = None):
+    print("Received user_id:", user_id)  # This will confirm what is being passed
     rabbitmq_client = RabbitMQ(queue_name='forum_post_view_queue')
     message = {"user_id": user_id} if user_id else {}
     response = rabbitmq_client.call(message)
@@ -126,10 +127,12 @@ async def vote_forum_post(request: FormPostVoteRequest):
         raise HTTPException(
             status_code=400, detail="Failed to vote on forum post")
 
+
 class ForumCommentCreateRequest(BaseModel):
     post_id: int
     content: str
     user_id: int
+
 
 @router.post("/api/forum/comment/create")
 async def create_forum_comment(request: ForumCommentCreateRequest):
@@ -145,4 +148,25 @@ async def create_forum_comment(request: ForumCommentCreateRequest):
     if response.get("success"):
         return {"message": "Forum comment created successfully", "comment_id": response.get("comment_id")}
     else:
-        raise HTTPException(status_code=400, detail="Failed to create forum comment")
+        raise HTTPException(
+            status_code=400, detail="Failed to create forum comment")
+
+
+@router.get("/api/forum/posts/user/{username}")
+async def get_forum_posts_by_user(username, user_id,):
+    if not username:
+        raise HTTPException(
+            status_code=400,
+            detail="Error: username not provided"
+        )
+    rabbitmq_client = RabbitMQ(queue_name='forum_post_user_queue')
+    message = {"user_id": user_id, "username": username} if user_id is not None else {"username": username}
+    response = rabbitmq_client.call(message)
+    rabbitmq_client.close_connection()
+    if response.get("success"):
+        return response.get("posts", [])
+    else:
+        raise HTTPException(
+            status_code=400,
+            detail="Failed to fetch forum posts"
+        )
