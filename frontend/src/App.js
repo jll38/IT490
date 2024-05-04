@@ -96,11 +96,7 @@ function App() {
     },
     {
       path: "profile/:username",
-      element: (
-        <RouteGuard>
-          <Profile></Profile>
-        </RouteGuard>
-      ),
+      element: <Profile></Profile>,
     },
     {
       path: "shopping-list",
