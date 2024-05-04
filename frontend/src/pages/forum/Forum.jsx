@@ -1,12 +1,13 @@
+import React, { useEffect, useState } from "react";
 import { ForumPost } from "./../../components/form/ForumPost";
-import React, { useEffect } from "react";
 import { BACKEND } from "../../lib/constants";
 import { User } from "../../lib/token";
+
 const ForumPage = () => {
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [posts, setPosts] = React.useState([]);
-  const [filteredPosts, setFilteredPosts] = React.useState([]);
-  console.log(User)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [posts, setPosts] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+
   useEffect(() => {
     setFilteredPosts(
       searchTerm.length === 0
@@ -19,20 +20,23 @@ const ForumPage = () => {
     );
   }, [posts, searchTerm]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetch(`${BACKEND}/api/forum/posts?user_id=${User.user_id}`)
       .then((res) => res.json())
       .then((data) => {
-        setPosts(data);
-        console.log(data);
+        // Sort posts by total votes (upvotes - downvotes) in descending order
+        const sortedPosts = data.sort((a, b) => {
+          const votesA = a.upvotes - a.downvotes;
+          const votesB = b.upvotes - b.downvotes;
+          return votesB - votesA; // For descending order
+        });
+        setPosts(sortedPosts);
       });
   }, [User.user_id]);
 
   return (
     <div className="forum-page container mx-auto my-8 p-4">
       <h1 className="text-3xl font-bold mb-4">Forum Posts</h1>
-
-      {/* Search Bar */}
       <div className="mb-6">
         <input
           type="text"
@@ -42,7 +46,6 @@ const ForumPage = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-
       <div className="mb-4">
         <a
           href="/forum/create-post"
@@ -51,10 +54,9 @@ const ForumPage = () => {
           New Post
         </a>
       </div>
-      {/* Posts List */}
       <div className="forum-posts w-full">
         {filteredPosts.length > 0 ? (
-          filteredPosts.map((post) => <ForumPost post={post} />)
+          filteredPosts.map((post) => <ForumPost post={post} key={post.post_id} />)
         ) : (
           <p>No posts found.</p>
         )}
