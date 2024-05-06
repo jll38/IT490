@@ -64,7 +64,8 @@ const ForumPage = () => {
         {filteredPosts.length > 0 ? (
           filteredPosts.map((post) => <ForumPost post={post} key={post.post_id} />)
         ) : (
-          <p>No posts found.</p>
+         <p style={{ fontStyle: 'italic', color: '#999' }}>No posts found.</p>
+        )}
         )}
       </div>
     </div>
