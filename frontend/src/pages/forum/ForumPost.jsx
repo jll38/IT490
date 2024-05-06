@@ -56,6 +56,24 @@ const PostDetailPage = () => {
         setError(error.message);
       });
   };
+
+  const handleDownvoteComment = (commentId) => {
+    fetch(`${BACKEND}/api/forum/posts/${id}/comments/downvote/${commentId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(res => res.json())
+    .then(updatedComment => {
+      const updatedComments = comments.map(comment =>
+        comment.id === updatedComment.id ? updatedComment : comment
+      );
+      setComments(updatedComments);
+      setFilteredComments(updatedComments);
+    })
+    .catch(err => setError(err.toString()));
+  };
 const handleDownvotePost = () => {
     fetch(`${BACKEND}/api/forum/posts/downvote/${id}`, {
       method: 'POST',
