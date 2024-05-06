@@ -11,7 +11,10 @@ const PostDetailPage = () => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredComments, setFilteredComments] = useState([]);
 
+  
   //Fetch post and comments
   useEffect(() => {
     // Fetch post details
