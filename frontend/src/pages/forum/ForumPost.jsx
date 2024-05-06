@@ -15,19 +15,16 @@ const PostDetailPage = () => {
   const [filteredComments, setFilteredComments] = useState([]);
 
   
-  //Fetch post and comments
+
   useEffect(() => {
-    // Fetch post details
+  
     fetch(`${BACKEND}/api/forum/posts/${id}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("Fetched data...");
-        console.log(data);
-        setPost(data);
+        setComments(data);
+        setFilteredComments(data);
       })
-      .catch((error) => {
-        setError(error.message);
-      });
+      .catch(err => setError(err.toString()));
   }, [id]);
 
   const handleSubmitComment = (event) => {
