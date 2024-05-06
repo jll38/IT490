@@ -6,9 +6,13 @@ import { isoToReadableDate } from '../../lib/DateTime';
 
 
 const ForumPage = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [posts, setPosts] = useState([]);
-  const [filteredPosts, setFilteredPosts] = useState([]);
+ const { id } = useParams();
+  const [post, setPost] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState('');
+  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredComments, setFilteredComments] = useState([])
 
   useEffect(() => {
     setFilteredPosts(
