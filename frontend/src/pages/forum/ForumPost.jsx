@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { isoToReadableDate } from "../../lib/DateTime";
 import { BACKEND } from "../../lib/constants";
 import { User } from "../../lib/token";
+
+
 const PostDetailPage = () => {
   const { id } = useParams();
   const [post, setPost] = useState();
