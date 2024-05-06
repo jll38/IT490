@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { ForumPost } from "./../../components/form/ForumPost";
 import { BACKEND } from "../../lib/constants";
-import { User } from "../../lib/token";
+import { useParams } from 'react-router-dom';
+import { isoToReadableDate } from '../../lib/DateTime';
+
 
 const ForumPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
